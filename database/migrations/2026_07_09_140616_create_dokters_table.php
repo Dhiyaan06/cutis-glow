@@ -11,9 +11,10 @@ return new class extends Migration
         Schema::create('dokters', function (Blueprint $table) {
             $table->id('id_dokter');
 
-            $table->foreignId('id_pengguna')
-                ->constrained('penggunas', 'id_pengguna')
-                ->cascadeOnDelete();
+            $table->foreign('id_pengguna')
+            ->references('id')
+            ->on('users')
+            ->onDelete('cascade');
 
             $table->string('spesialis');
             $table->string('no_str')->nullable();

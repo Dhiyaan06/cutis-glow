@@ -12,21 +12,10 @@ return new class extends Migration
 
             $table->id('id_riwayat');
 
-            $table->foreignId('id_booking')
-                ->constrained('booking_konsultasis', 'id_booking')
-                ->cascadeOnDelete();
-
-            $table->foreignId('id_pasien')
-                ->constrained('pasiens', 'id_pasien')
-                ->cascadeOnDelete();
-
-            $table->foreignId('id_dokter')
-                ->constrained('dokters', 'id_dokter')
-                ->cascadeOnDelete();
-
-            $table->foreignId('id_masterlayanan')
-                ->constrained('master_layanans', 'id_masterlayanan')
-                ->cascadeOnDelete();
+            $table->unsignedBigInteger('id_booking');
+            $table->unsignedBigInteger('id_pasien');
+            $table->unsignedBigInteger('id_dokter');
+            $table->unsignedBigInteger('id_masterlayanan');
 
             $table->date('tanggal_treatment');
 
@@ -38,11 +27,34 @@ return new class extends Migration
 
             $table->text('catatan')->nullable();
 
-            $table->decimal('harga', 10, 2);
+            $table->decimal('price',10,2);
 
             $table->integer('qty')->default(1);
 
+            $table->decimal('total',10,2);
+
             $table->timestamps();
+
+            $table->foreign('id_booking')
+                  ->references('id_booking')
+                  ->on('booking_konsultasis')
+                  ->onDelete('cascade');
+
+            $table->foreign('id_pasien')
+                  ->references('id_pasien')
+                  ->on('pasiens')
+                  ->onDelete('cascade');
+
+            $table->foreign('id_dokter')
+                  ->references('id_dokter')
+                  ->on('dokters')
+                  ->onDelete('cascade');
+
+            $table->foreign('id_masterlayanan')
+                  ->references('id')
+                  ->on('master_services')
+                  ->onDelete('cascade');
+
         });
     }
 

@@ -22,10 +22,10 @@ return new class extends Migration
 
             $table->timestamps();
 
-            $table->foreign('id_pengguna')
-                ->references('id_pengguna')
-                ->on('pengguna')
-                ->cascadeOnDelete();
+           $table->foreign('id_pengguna')
+            ->references('id')
+            ->on('users')
+            ->onDelete('cascade');
 
         });
     }

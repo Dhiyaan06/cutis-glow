@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ConsultationBooking extends Model
 {
@@ -42,5 +43,9 @@ class ConsultationBooking extends Model
     public function schedule(): BelongsTo
     {
         return $this->belongsTo(DoctorSchedule::class);
+    }
+    public function serviceHistories()
+    {
+    return $this->hasMany(ServiceHistory::class, 'booking_id');
     }
 }

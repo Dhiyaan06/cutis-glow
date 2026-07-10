@@ -34,4 +34,8 @@ class Patient extends Model
     {
         return $this->hasMany(ConsultationBooking::class);
     }
+    public function serviceHistories()
+    {
+    return $this->hasMany(ServiceHistory::class, 'patient_id');
+    }
 }

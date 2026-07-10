@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class JadwalDokter extends Model
+class DoctorSchedule extends Model
 {
     //
 }

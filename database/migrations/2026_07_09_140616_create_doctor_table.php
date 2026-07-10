@@ -9,17 +9,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('dokters', function (Blueprint $table) {
-            $table->id('id_dokter');
+            $table->id();
 
-            $table->foreign('id_pengguna')
-            ->references('id')
-            ->on('users')
-            ->onDelete('cascade');
+            $table->foreignId('user_id')
+                ->constrained('users')
+                ->cascadeOnDelete();
 
-            $table->string('spesialis');
-            $table->string('no_str')->nullable();
-            $table->string('no_hp');
-            $table->text('alamat')->nullable();
+            $table->string('specialization');
+            $table->string('license_number')->nullable();
+            $table->string('phone');
+            $table->text('address')->nullable();
 
             $table->timestamps();
         });

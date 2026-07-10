@@ -14,19 +14,19 @@ return new class extends Migration
         Schema::create('master_services', function (Blueprint $table) {
             $table->id();
 
-            $table->string('nama_layanan');
+            $table->string('service_name');
 
             $table->enum('type', [
                 'service',
                 'product',
-                'konsultasi'
+                'consultation'
             ]);
 
             $table->decimal('price', 10, 2);
 
             $table->decimal('discount', 10, 2)->default(0);
 
-            $table->text('keterangan')->nullable();
+            $table->text('description')->nullable();
 
             $table->timestamps();
         });

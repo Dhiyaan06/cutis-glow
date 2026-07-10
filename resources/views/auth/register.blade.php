@@ -16,6 +16,23 @@
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
+        <!-- Nomor HP -->
+<div class="mt-4">
+    <x-input-label for="no_hp" :value="__('Nomor HP')" />
+
+    <x-text-input
+        id="no_hp"
+        class="block mt-1 w-full"
+        type="text"
+        name="no_hp"
+        :value="old('no_hp')"
+        required
+        autofocus
+    />
+
+    <x-input-error :messages="$errors->get('no_hp')" class="mt-2" />
+</div>
+
         <!-- Password -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />

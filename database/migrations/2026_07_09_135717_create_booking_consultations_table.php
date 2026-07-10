@@ -20,7 +20,7 @@ return new class extends Migration
                   ->cascadeOnDelete();
 
             $table->foreignId('doctor_id')
-                  ->constrained('doctors')
+                  ->constrained('doctor_schedules')
                   ->cascadeOnDelete();
 
             $table->foreignId('schedule_id')

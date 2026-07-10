@@ -10,39 +10,51 @@ return new class extends Migration
     {
         Schema::create('riwayat_layanans', function (Blueprint $table) {
 
-            $table->id();
+            $table->id('id_riwayat');
 
-            $table->foreignId('booking_id')
-                ->constrained('booking_consultations')
-                ->cascadeOnDelete();
+            $table->unsignedBigInteger('id_booking');
+            $table->unsignedBigInteger('id_pasien');
+            $table->unsignedBigInteger('id_dokter');
+            $table->unsignedBigInteger('id_masterlayanan');
 
-            $table->foreignId('patient_id')
-                ->constrained('patients')
-                ->cascadeOnDelete();
-
-            $table->foreignId('doctor_id')
-                ->constrained('doctors')
-                ->cascadeOnDelete();
-
-            $table->foreignId('service_id')
-                ->constrained('master_services')
-                ->cascadeOnDelete();
-
-            $table->date('treatment_date');
+            $table->date('tanggal_treatment');
 
             $table->enum('status', [
-                'process',
-                'completed',
-                'cancelled'
+                'proses',
+                'selesai',
+                'batal'
             ]);
 
-            $table->text('notes')->nullable();
+            $table->text('catatan')->nullable();
 
-            $table->decimal('price', 10, 2);
+            $table->decimal('price',10,2);
+
             $table->integer('qty')->default(1);
-            $table->decimal('total', 10, 2);
+
+            $table->decimal('total',10,2);
 
             $table->timestamps();
+
+            $table->foreign('id_booking')
+                  ->references('id_booking')
+                  ->on('booking_konsultasis')
+                  ->onDelete('cascade');
+
+            $table->foreign('id_pasien')
+                  ->references('id_pasien')
+                  ->on('pasiens')
+                  ->onDelete('cascade');
+
+            $table->foreign('id_dokter')
+                  ->references('id_dokter')
+                  ->on('dokters')
+                  ->onDelete('cascade');
+
+            $table->foreign('id_masterlayanan')
+                  ->references('id')
+                  ->on('master_services')
+                  ->onDelete('cascade');
+
         });
     }
 

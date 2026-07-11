@@ -24,7 +24,7 @@ class MasterLayananController extends Controller
      */
     public function create()
     {
-        //
+        return view('layanan.create');
     }
 
     /**
@@ -32,7 +32,22 @@ class MasterLayananController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // 1. Validasi Inputan User
+        $request->validate([
+            'nama_layanan' => 'required|string|max:255',
+            'deskripsi'    => 'nullable|string',
+            'harga'        => 'required|numeric|min:0',
+        ]);
+
+        // 2. Simpan ke Database
+        \App\Models\MasterLayanan::create([
+            'nama_layanan' => $request->nama_layanan,
+            'deskripsi'    => $request->deskripsi,
+            'harga'        => $request->harga,
+        ]);
+
+        // 3. Redirect kembali ke halaman index dengan pesan sukses
+        return redirect()->route('layanan.index')->with('success', 'Layanan baru berhasil ditambahkan!');
     }
 
     /**

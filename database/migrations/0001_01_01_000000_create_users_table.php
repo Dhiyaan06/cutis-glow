@@ -12,14 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
-        });
+        $table->id('id_pengguna'); // Mengubah primary key agar sesuai ERD
+        $table->string('name');
+        $table->string('email')->unique();
+        $table->timestamp('email_verified_at')->nullable();
+        $table->string('password');
+        $table->string('no_hp'); // Tambahan kolom sesuai ERD
+        $table->enum('role', ['admin', 'dokter', 'pasien']); // Tambahan untuk multi-role
+        $table->enum('status_aktif', ['aktif', 'nonaktif'])->default('aktif'); // Tambahan status
+        $table->rememberToken();
+        $table->timestamps();
+    });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();

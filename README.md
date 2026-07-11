@@ -29,3 +29,25 @@ php artisan serve
 | dokter@cutisglow.com | password | dokter |
 | pasien@cutisglow.com | password | pasien |
 
+## Update Terbaru: Fitur & Perubahan Database
+
+### 1. Modul CRUD Master Layanan Klinik (Cutis Glow)
+Berhasil mengimplementasikan modul manajemen layanan klinik secara utuh:
+- Halaman utama daftar layanan (`index`)
+- Form tambah dan logika simpan data (`create` & `store`)
+- Form ubah dan logika perbarui data (`edit` & `update`)
+- Logika hapus data (`destroy`)
+
+### PERINTAH WAJIB SETELAH CLONE / PULL (PENTING!)
+Ada perubahan pada struktur tabel `users` dengan penambahan kolom `no_hp`. Agar aplikasi tidak mengalami error saat registrasi, jalankan perintah migrasi database berikut di terminal lokal masing-masing:
+
+```bash
+php artisan migrate
+```
+
+Catatan: Jika migrasi standar mengalami kendala struktur, gunakan perintah fresh (peringatan: akan mengulang data dari awal):
+
+```bash
+php artisan migrate:fresh --seed
+```
+

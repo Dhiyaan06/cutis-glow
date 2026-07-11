@@ -17,7 +17,7 @@ return new class extends Migration
         $table->string('email')->unique();
         $table->timestamp('email_verified_at')->nullable();
         $table->string('password');
-        $table->string('no_hp'); // Tambahan kolom sesuai ERD
+        $table->string('no_hp')->nullable(); // Tambahan kolom sesuai ERD
         $table->enum('role', ['admin', 'dokter', 'pasien']); // Tambahan untuk multi-role
         $table->enum('status_aktif', ['aktif', 'nonaktif'])->default('aktif'); // Tambahan status
         $table->rememberToken();

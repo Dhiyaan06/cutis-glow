@@ -20,6 +20,7 @@ git clone https://github.com/Dhiyaan06/cutis-glow.git && cd cutis-glow
 composer install && npm install && npm run build
 php artisan migrate --seed
 php artisan serve
+```
 
 ## Akun Default
 | Email | Password | Role |

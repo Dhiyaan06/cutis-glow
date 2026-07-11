@@ -53,32 +53,55 @@ class MasterLayananController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(MasterLayanan $masterLayanan)
-    {
+    #public function show(id)
+    #{
         //
-    }
+    #}
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(MasterLayanan $masterLayanan)
+    public function edit($id)
     {
-        //
+        // Cari data layanan berdasarkan ID, jika tidak ada otomatis memunculkan halaman 404
+        $layanan = \App\Models\MasterLayanan::findOrFail($id);
+        return view('layanan.edit', compact('layanan'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, MasterLayanan $masterLayanan)
+    public function update(Request $request, $id)
     {
-        //
+        // 1. Validasi Inputan
+        $request->validate([
+            'nama_layanan' => 'required|string|max:255',
+            'deskripsi'    => 'nullable|string',
+            'harga'        => 'required|numeric|min:0',
+        ]);
+
+        // 2. Cari data dan Update
+        $layanan = \App\Models\MasterLayanan::findOrFail($id);
+        $layanan->update([
+            'nama_layanan' => $request->nama_layanan,
+            'deskripsi'    => $request->deskripsi,
+            'harga'        => $request->harga,
+        ]);
+
+        // 3. Kembalikan ke index dengan notifikasi sukses
+        return redirect()->route('layanan.index')->with('success', 'Data layanan berhasil diperbarui!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(MasterLayanan $masterLayanan)
+    public function destroy($id)
     {
-        //
+        // Cari data dan Hapus
+        $layanan = \App\Models\MasterLayanan::findOrFail($id);
+        $layanan->delete();
+
+        // Kembalikan dengan notifikasi sukses
+        return redirect()->route('layanan.index')->with('success', 'Layanan berhasil dihapus!');
     }
 }

@@ -1,0 +1,69 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\MasterLayanan;
+use Illuminate\Http\Request;
+
+class MasterLayananController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        // 1. Ambil semua data layanan dari database
+        $layanan = \App\Models\MasterLayanan::all();
+
+        // 2. Lempar datanya ke halaman view 'layanan.index'
+        return view('layanan.index', compact('layanan'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(MasterLayanan $masterLayanan)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(MasterLayanan $masterLayanan)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, MasterLayanan $masterLayanan)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(MasterLayanan $masterLayanan)
+    {
+        //
+    }
+}

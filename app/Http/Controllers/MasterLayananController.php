@@ -45,6 +45,7 @@ class MasterLayananController extends Controller
             'nama_layanan' => $request->nama_layanan,
             'deskripsi'    => $request->deskripsi,
             'harga'        => $request->harga,
+            'diskon'       => $request->diskon ?? 0,
         ]);
 
         // 3. Redirect kembali ke halaman index dengan pesan sukses
@@ -88,6 +89,7 @@ class MasterLayananController extends Controller
             'nama_layanan' => $request->nama_layanan,
             'deskripsi'    => $request->deskripsi,
             'harga'        => $request->harga,
+            'diskon'       => $request->diskon ?? 0,
         ]);
 
         // 3. Kembalikan ke index dengan notifikasi sukses

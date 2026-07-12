@@ -47,6 +47,12 @@
                         @enderror
                     </div>
 
+                    <div class="mb-4">
+                        <label for="diskon" class="block text-sm font-medium text-gray-700">Diskon (%)</label>
+                        <input type="number" name="diskon" id="diskon" min="0" max="100" value="{{ old('diskon', $layanan->diskon ?? 0) }}"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    </div>
+
                     <!-- Tombol Aksi -->
                     <div class="flex justify-end gap-2">
                         <button type="reset" class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300 transition">

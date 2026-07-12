@@ -12,8 +12,8 @@ class MasterLayananController extends Controller
      */
     public function index()
     {
-        // 1. Ambil semua data layanan dari database
-        $layanan = \App\Models\MasterLayanan::all();
+        // 1. Pagination agar tampil 10 data per halaman
+        $layanan = MasterLayanan::paginate(10);
 
         // 2. Lempar datanya ke halaman view 'layanan.index'
         return view('layanan.index', compact('layanan'));
@@ -37,6 +37,7 @@ class MasterLayananController extends Controller
             'nama_layanan' => 'required|string|max:255',
             'deskripsi'    => 'nullable|string',
             'harga'        => 'required|numeric|min:0',
+            'diskon'       => 'nullable|numeric|min:0|max:100',
         ]);
 
         // 2. Simpan ke Database
@@ -78,6 +79,7 @@ class MasterLayananController extends Controller
             'nama_layanan' => 'required|string|max:255',
             'deskripsi'    => 'nullable|string',
             'harga'        => 'required|numeric|min:0',
+            'diskon'       => 'nullable|numeric|min:0|max:100',
         ]);
 
         // 2. Cari data dan Update

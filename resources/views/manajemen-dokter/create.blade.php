@@ -13,6 +13,7 @@
                     Form Tambah Data Dokter
                 </h3>
 
+                {{-- Menampilkan Error Validasi --}}
                 @if ($errors->any())
                     <div class="bg-red-100 border border-red-400 text-red-700 p-4 rounded mb-4">
                         <ul class="list-disc ml-5">
@@ -23,17 +24,20 @@
                     </div>
                 @endif
 
-                <form action="{{ route('manajemen-dokter.store') }}" method="POST">
+                <form action="{{ route('dokter.store') }}" method="POST">
                     @csrf
 
                     <!-- Nama Dokter -->
                     <div class="mb-4">
-                        <label class="block text-gray-700 font-medium mb-2">
+                        <label for="id_pengguna" class="block text-gray-700 font-medium mb-2">
                             Nama Dokter
                         </label>
 
-                        <select name="id_pengguna"
-                            class="w-full border-gray-300 rounded-lg shadow-sm">
+                        <select
+                            name="id_pengguna"
+                            id="id_pengguna"
+                            class="w-full border-gray-300 rounded-lg shadow-sm"
+                            required>
 
                             <option value="">-- Pilih Dokter --</option>
 
@@ -49,78 +53,93 @@
 
                     <!-- Spesialis -->
                     <div class="mb-4">
-                        <label class="block text-gray-700 font-medium mb-2">
+                        <label for="spesialis" class="block text-gray-700 font-medium mb-2">
                             Spesialis
                         </label>
 
-                        <input type="text"
+                        <input
+                            type="text"
                             name="spesialis"
-                            value="{{ old('spesialis') }}"
+                            id="spesialis"
                             class="w-full border-gray-300 rounded-lg shadow-sm"
-                            placeholder="Contoh: Dokter Kulit">
+                            value="{{ old('spesialis') }}"
+                            placeholder="Contoh: Dokter Kulit"
+                            required>
                     </div>
 
                     <!-- Nomor STR -->
                     <div class="mb-4">
-                        <label class="block text-gray-700 font-medium mb-2">
+                        <label for="no_str" class="block text-gray-700 font-medium mb-2">
                             Nomor STR
                         </label>
 
-                        <input type="text"
+                        <input
+                            type="text"
                             name="no_str"
-                            value="{{ old('no_str') }}"
+                            id="no_str"
                             class="w-full border-gray-300 rounded-lg shadow-sm"
-                            placeholder="Masukkan Nomor STR">
+                            value="{{ old('no_str') }}"
+                            placeholder="Masukkan Nomor STR"
+                            required>
                     </div>
 
                     <!-- Nomor HP -->
                     <div class="mb-4">
-                        <label class="block text-gray-700 font-medium mb-2">
+                        <label for="no_hp" class="block text-gray-700 font-medium mb-2">
                             Nomor HP
                         </label>
 
-                        <input type="text"
+                        <input
+                            type="text"
                             name="no_hp"
-                            value="{{ old('no_hp') }}"
+                            id="no_hp"
                             class="w-full border-gray-300 rounded-lg shadow-sm"
-                            placeholder="08xxxxxxxxxx">
+                            value="{{ old('no_hp') }}"
+                            placeholder="08xxxxxxxxxx"
+                            required>
                     </div>
 
                     <!-- Jadwal Praktek -->
                     <div class="mb-4">
-                        <label class="block text-gray-700 font-medium mb-2">
+                        <label for="jadwal_praktek" class="block text-gray-700 font-medium mb-2">
                             Jadwal Praktek
                         </label>
 
-                        <input type="text"
+                        <input
+                            type="text"
                             name="jadwal_praktek"
-                            value="{{ old('jadwal_praktek') }}"
+                            id="jadwal_praktek"
                             class="w-full border-gray-300 rounded-lg shadow-sm"
-                            placeholder="Contoh: Senin - Jumat">
+                            value="{{ old('jadwal_praktek') }}"
+                            placeholder="Contoh: Senin - Jumat"
+                            required>
                     </div>
 
                     <!-- Alamat -->
                     <div class="mb-6">
-                        <label class="block text-gray-700 font-medium mb-2">
+                        <label for="alamat" class="block text-gray-700 font-medium mb-2">
                             Alamat
                         </label>
 
                         <textarea
                             name="alamat"
+                            id="alamat"
                             rows="4"
                             class="w-full border-gray-300 rounded-lg shadow-sm"
-                            placeholder="Masukkan alamat dokter">{{ old('alamat') }}</textarea>
+                            placeholder="Masukkan alamat dokter"
+                            required>{{ old('alamat') }}</textarea>
                     </div>
 
                     <!-- Tombol -->
                     <div class="flex justify-end">
 
-                        <a href="{{ route('manajemen-dokter.index') }}"
+                        <a href="{{ route('dokter.index') }}"
                             class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded mr-3">
                             Kembali
                         </a>
 
-                        <button type="submit"
+                        <button
+                            type="submit"
                             class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
                             Simpan
                         </button>

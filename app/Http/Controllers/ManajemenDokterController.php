@@ -22,8 +22,8 @@ class ManajemenDokterController extends Controller
      */
     public function create()
     {
-        $user = User::where('role', 'dokter')->get();
-        return view('manajemen-dokter.create', compact('user'));
+        $users = User::where('role', 'dokter')->get();
+        return view('manajemen-dokter.create', compact('users'));
     }
 
     /**
@@ -68,8 +68,8 @@ class ManajemenDokterController extends Controller
     public function edit($id)
     {
         $dokter = ManajemenDokter::findOrFail($id);
-        $user = User::where('role', 'dokter')->get();
-        return view('manajemen-dokter.edit', compact('dokter'));
+        $users = User::where('role', 'dokter')->get();
+        return view('manajemen-dokter.edit', compact('dokter', 'users'));
     }
 
     /**

@@ -2,24 +2,33 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ManajemenPasien extends Model
 {
+    use HasFactory;
+
     protected $table = 'pasien';
 
     protected $primaryKey = 'id_pasien';
 
     protected $fillable = [
-        'id_pengguna',
+        'nama',
+        'email',
+        'password',
         'no_hp',
         'alamat',
         'tanggal_lahir',
         'jenis_kelamin',
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'id_pengguna', 'id_pengguna');
-    }
+    protected $hidden = [
+        'password',
+    ];
+
+    protected $casts = [
+        'tanggal_lahir' => 'date',
+        'password' => 'hashed',
+    ];
 }

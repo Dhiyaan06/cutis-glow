@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\ManajemenPasien;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -13,31 +12,23 @@ class ManajemenPasienController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-{
-    $query = ManajemenPasien::with('user');
+    {
+        $query = ManajemenPasien::query();
 
-    // Search berdasarkan name atau email
-    if ($request->search) {
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('nama', 'like', '%' . $request->search . '%')
+                  ->orWhere('email', 'like', '%' . $request->search . '%');
+            });
+        }
 
-        $query->whereHas('user', function ($q) use ($request) {
+        if ($request->filled('jenis_kelamin')) {
+            $query->where('jenis_kelamin', $request->jenis_kelamin);
+        }
 
-            $q->where('name', 'like', '%' . $request->search . '%')
-              ->orWhere('email', 'like', '%' . $request->search . '%');
+        $pasien = $query->paginate(10);
 
-        });
-
-    }
-
-    // Filter jenis kelamin
-    if ($request->jenis_kelamin) {
-
-        $query->where('jenis_kelamin', $request->jenis_kelamin);
-
-    }
-
-    $pasien = $query->paginate(10);
-
-    return view('manajemen_pasien.index', compact('pasien'));
+        return view('manajemen_pasien.index', compact('pasien'));
     }
 
     /**
@@ -54,30 +45,27 @@ class ManajemenPasienController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'            => 'required',
-            'email'           => 'required|email|unique:users,email',
-            'password'        => 'required|min:6',
-            'no_hp'           => 'required',
-            'jenis_kelamin'   => 'required',
-            'tanggal_lahir'   => 'required|date',
-            'alamat'          => 'required',
-        ]);
-
-        $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => Hash::make($request->password),
+            'name'             => 'required|string|max:100',
+            'email'            => 'required|email|unique:pasien,email',
+            'password'         => 'required|min:6',
+            'no_hp'            => 'required',
+            'jenis_kelamin'    => 'required|in:L,P',
+            'tanggal_lahir'    => 'required|date',
+            'alamat'           => 'required',
         ]);
 
         ManajemenPasien::create([
-            'id_pengguna'     => $user->id_pengguna,
-            'no_hp'           => $request->no_hp,
-            'jenis_kelamin'   => $request->jenis_kelamin,
-            'tanggal_lahir'   => $request->tanggal_lahir,
-            'alamat'          => $request->alamat,
+            'nama'             => $request->name,
+            'email'            => $request->email,
+            'password'         => Hash::make($request->password),
+            'no_hp'            => $request->no_hp,
+            'jenis_kelamin'    => $request->jenis_kelamin,
+            'tanggal_lahir'    => $request->tanggal_lahir,
+            'alamat'           => $request->alamat,
         ]);
 
-        return redirect()->route('pasien.index')
+        return redirect()
+            ->route('pasien.index')
             ->with('success', 'Data pasien berhasil ditambahkan.');
     }
 
@@ -86,7 +74,7 @@ class ManajemenPasienController extends Controller
      */
     public function show($id)
     {
-        $pasien = ManajemenPasien::with('user')->findOrFail($id);
+        $pasien = ManajemenPasien::findOrFail($id);
 
         return view('manajemen_pasien.show', compact('pasien'));
     }
@@ -96,7 +84,7 @@ class ManajemenPasienController extends Controller
      */
     public function edit($id)
     {
-        $pasien = ManajemenPasien::with('user')->findOrFail($id);
+        $pasien = ManajemenPasien::findOrFail($id);
 
         return view('manajemen_pasien.edit', compact('pasien'));
     }
@@ -107,29 +95,27 @@ class ManajemenPasienController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name'            => 'required',
-            'email'           => 'required|email',
-            'no_hp'           => 'required',
-            'jenis_kelamin'   => 'required',
-            'tanggal_lahir'   => 'required|date',
-            'alamat'          => 'required',
+            'name'             => 'required|string|max:100',
+            'email'            => 'required|email|unique:pasien,email,' . $id . ',id_pasien',
+            'no_hp'            => 'required',
+            'jenis_kelamin'    => 'required|in:L,P',
+            'tanggal_lahir'    => 'required|date',
+            'alamat'           => 'required',
         ]);
 
-        $pasien = ManajemenPasien::with('user')->findOrFail($id);
-
-        $pasien->user->update([
-            'name'  => $request->name,
-            'email' => $request->email,
-        ]);
+        $pasien = ManajemenPasien::findOrFail($id);
 
         $pasien->update([
-            'no_hp'           => $request->no_hp,
-            'jenis_kelamin'   => $request->jenis_kelamin,
-            'tanggal_lahir'   => $request->tanggal_lahir,
-            'alamat'          => $request->alamat,
+            'nama'             => $request->name,
+            'email'            => $request->email,
+            'no_hp'            => $request->no_hp,
+            'jenis_kelamin'    => $request->jenis_kelamin,
+            'tanggal_lahir'    => $request->tanggal_lahir,
+            'alamat'           => $request->alamat,
         ]);
 
-        return redirect()->route('pasien.index')
+        return redirect()
+            ->route('pasien.index')
             ->with('success', 'Data pasien berhasil diperbarui.');
     }
 
@@ -138,12 +124,12 @@ class ManajemenPasienController extends Controller
      */
     public function destroy($id)
     {
-        $pasien = ManajemenPasien::with('user')->findOrFail($id);
+        $pasien = ManajemenPasien::findOrFail($id);
 
-        $pasien->user->delete();
         $pasien->delete();
 
-        return redirect()->route('pasien.index')
+        return redirect()
+            ->route('pasien.index')
             ->with('success', 'Data pasien berhasil dihapus.');
     }
 }

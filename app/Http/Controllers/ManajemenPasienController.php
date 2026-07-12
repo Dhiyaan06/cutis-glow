@@ -5,18 +5,39 @@ namespace App\Http\Controllers;
 use App\Models\ManajemenPasien;
 use App\Models\User;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Hash;
 
 class ManajemenPasienController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $pasien = ManajemenPasien::with('user')->get();
+    public function index(Request $request)
+{
+    $query = ManajemenPasien::with('user');
 
-        return view('manajemen_pasien.index', compact('pasiens'));
+    // Search berdasarkan name atau email
+    if ($request->search) {
+
+        $query->whereHas('user', function ($q) use ($request) {
+
+            $q->where('name', 'like', '%' . $request->search . '%')
+              ->orWhere('email', 'like', '%' . $request->search . '%');
+
+        });
+
+    }
+
+    // Filter jenis kelamin
+    if ($request->jenis_kelamin) {
+
+        $query->where('jenis_kelamin', $request->jenis_kelamin);
+
+    }
+
+    $pasien = $query->paginate(10);
+
+    return view('manajemen_pasien.index', compact('pasien'));
     }
 
     /**
@@ -31,35 +52,41 @@ class ManajemenPasienController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-{
-    $user = User::create([
-        'nama' => $request->nama,
-        'email' => $request->email,
-        'password' => bcrypt($request->password),
-    ]);
+    {
+        $request->validate([
+            'name'            => 'required',
+            'email'           => 'required|email|unique:users,email',
+            'password'        => 'required|min:6',
+            'no_hp'           => 'required',
+            'jenis_kelamin'   => 'required',
+            'tanggal_lahir'   => 'required|date',
+            'alamat'          => 'required',
+        ]);
 
-    ManajemenPasien::create([
-        'user_id'         => $user->id_pengguna,
-        'jenis_kelamin'   => $request->jenis_kelamin,
-        'tanggal_lahir'   => $request->tanggal_lahir,
-        'alamat'          => $request->alamat,
-    ]);
+        $user = User::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
 
-    return redirect()->back();
-}
+        ManajemenPasien::create([
+            'id_pengguna'     => $user->id_pengguna,
+            'no_hp'           => $request->no_hp,
+            'jenis_kelamin'   => $request->jenis_kelamin,
+            'tanggal_lahir'   => $request->tanggal_lahir,
+            'alamat'          => $request->alamat,
+        ]);
 
-
+        return redirect()->route('pasien.index')
+            ->with('success', 'Data pasien berhasil ditambahkan.');
+    }
 
     /**
      * Display the specified resource.
      */
     public function show($id)
     {
-        $pasien = ManajemenPasien::with([
-            'user',
-            'bookingKonsultasi',
-            'RiwayatLayanan'
-        ])->findOrFail($id);
+        $pasien = ManajemenPasien::with('user')->findOrFail($id);
 
         return view('manajemen_pasien.show', compact('pasien'));
     }
@@ -71,52 +98,52 @@ class ManajemenPasienController extends Controller
     {
         $pasien = ManajemenPasien::with('user')->findOrFail($id);
 
-        return view('admin.manajemen_pasien.edit', compact('pasien'));
+        return view('manajemen_pasien.edit', compact('pasien'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-     public function update(Request $request, $id)
+    public function update(Request $request, $id)
     {
-        $pasien = ManajemenPasien::findOrFail($id);
-
         $request->validate([
-            'nama'            => 'required',
+            'name'            => 'required',
             'email'           => 'required|email',
+            'no_hp'           => 'required',
             'jenis_kelamin'   => 'required',
-            'tanggal_lahir'   => 'required',
+            'tanggal_lahir'   => 'required|date',
             'alamat'          => 'required',
         ]);
 
+        $pasien = ManajemenPasien::with('user')->findOrFail($id);
 
         $pasien->user->update([
-            'nama'      => $request->nama,
-            'email'     => $request->email,
+            'name'  => $request->name,
+            'email' => $request->email,
         ]);
 
         $pasien->update([
-            'jenis_kelamin' => $request->jenis_kelamin,
-            'tanggal_lahir' => $request->tanggal_lahir,
-            'alamat'        => $request->alamat,
+            'no_hp'           => $request->no_hp,
+            'jenis_kelamin'   => $request->jenis_kelamin,
+            'tanggal_lahir'   => $request->tanggal_lahir,
+            'alamat'          => $request->alamat,
         ]);
 
-        return redirect()->route('manajemen-pasien.index')
-                ->with('success', 'Data pasien berhasil diperbarui.');
-        }
+        return redirect()->route('pasien.index')
+            ->with('success', 'Data pasien berhasil diperbarui.');
+    }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy($id)
     {
-        $pasien = ManajemenPasien::findOrFail($id);
+        $pasien = ManajemenPasien::with('user')->findOrFail($id);
 
-        // Jika ingin benar-benar menghapus
         $pasien->user->delete();
         $pasien->delete();
 
-        return redirect()->route('manajemen-pasien.index')
+        return redirect()->route('pasien.index')
             ->with('success', 'Data pasien berhasil dihapus.');
     }
 }

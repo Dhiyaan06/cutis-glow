@@ -6,14 +6,15 @@ use App\Http\Controllers\MasterLayananController;
 use App\Http\Controllers\BookingKonsultasiController;
 use App\Http\Controllers\ManajemenDokterController;
 use App\Http\Controllers\ManajemenPasienController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+//Route::get('/dashboard', function () {
+//    return view('dashboard');
+//})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -41,4 +42,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('dokter', ManajemenDokterController::class);
 });
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->name('dashboard');
+});
 require __DIR__.'/auth.php';

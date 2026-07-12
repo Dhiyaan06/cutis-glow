@@ -22,6 +22,34 @@
                     </a>
                 </div>
 
+                <!-- Form Pencarian -->
+                <form action="{{ route('dokter.index') }}" method="GET" class="mb-4">
+                    <div class="flex gap-3">
+                        <input
+                            type="text"
+                            name="search"
+                            placeholder="Cari nama dokter..."
+                            value="{{ request('search') }}"
+                            class="border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                        <select name="spesialis" class="border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Semua Spesialis</option>
+                            @foreach($spesialis as $item)
+                                <option value="{{ $item->spesialis }}" {{ request('spesialis') == $item->spesialis ? 'selected' : '' }}>
+                                    {{ $item->spesialis }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <button type="submit" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded shadow">
+                            Cari
+                        </button>
+                            <a href="{{ route('dokter.index') }}"
+                            class="bg-gray-500 text-white px-4 py-2 rounded">
+                            Reset
+                            </a>
+                    </div>
+                </form>
+
                 <!-- Notifikasi -->
                 @if(session('success'))
                     <div class="bg-green-100 border border-green-400 text-green-700 p-3 rounded mb-4">
@@ -53,7 +81,7 @@
                                 <tr class="hover:bg-gray-50 text-gray-700">
 
                                     <td class="border border-gray-200 p-3 font-medium">
-                                        {{ $item->pengguna->name }}
+                                        {{ $item->nama }}
                                     </td>
 
                                     <td class="border border-gray-200 p-3">

@@ -21,7 +21,7 @@
                             Nama Dokter
                         </td>
                         <td class="border border-gray-200 p-3">
-                            {{ $dokter->pengguna->name }}
+                            {{ $dokter->nama }}
                         </td>
                     </tr>
 

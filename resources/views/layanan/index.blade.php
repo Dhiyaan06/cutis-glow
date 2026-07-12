@@ -24,6 +24,37 @@
                     </div>
                 @endif
 
+                <!-- Form Search & Filter -->
+                <form action="{{ route('layanan.index') }}" method="GET" class="mb-6 flex flex-col md:flex-row gap-4 items-center justify-between">
+                    <div class="flex flex-1 w-full gap-2">
+                        <!-- Input Search -->
+                        <div class="relative w-full">
+                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama layanan..."
+                                class="w-full pl-3 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
+                        </div>
+
+                        <!-- Dropdown Filter Diskon -->
+                        <div class="w-48">
+                            <select name="filter_diskon" class="w-full py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
+                                <option value="">Semua Diskon</option>
+                                <option value="ada_diskon" {{ request('filter_diskon') == 'ada_diskon' ? 'selected' : '' }}>Ada Diskon</option>
+                                <option value="tanpa_diskon" {{ request('filter_diskon') == 'tanpa_diskon' ? 'selected' : '' }}>Tanpa Diskon</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Tombol Aksi -->
+                    <div class="flex gap-2 w-full md:w-auto justify-end">
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow text-sm transition font-medium">
+                            Cari & Filter
+                        </button>
+                        @if(request('search') || request('filter_diskon'))
+                            <a href="{{ route('layanan.index') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded text-sm transition font-medium">
+                                Reset
+                            </a>
+                        @endif
+                    </div>
+                </form>
                 <!-- Tabel Data Layanan -->
                 <div class="overflow-x-auto">
                     <table class="w-full border-collapse border border-gray-200">

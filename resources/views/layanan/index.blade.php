@@ -40,7 +40,28 @@
                                 <tr class="hover:bg-gray-50 text-gray-600">
                                     <td class="border border-gray-200 p-3 font-medium text-gray-800">{{ $item->nama_layanan }}</td>
                                     <td class="border border-gray-200 p-3">{{ $item->deskripsi ?? '-' }}</td>
-                                    <td class="border border-gray-200 p-3">Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-950">
+                                        @if($item->diskon > 0)
+                                            <!-- Menghitung harga setelah dipotong diskon -->
+                                            @php
+                                                $hargaDiskon = $item->harga - ($item->harga * $item->diskon / 100);
+                                            @endphp
+                                            <div class="flex flex-col">
+                                                <!-- Harga Asli Coret & Label Persen -->
+                                                <div class="flex items-center space-x-2">
+                                                    <span class="line-through text-xs text-gray-400">Rp {{ number_format($item->harga, 0, ',', '.') }}</span>
+                                                    <span class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-semibold bg-red-100 text-red-700">
+                                                        -{{ $item->diskon }}%
+                                                    </span>
+                                                </div>
+                                                <!-- Harga Akhir -->
+                                                <span class="font-bold text-emerald-600">Rp {{ number_format($hargaDiskon, 0, ',', '.') }}</span>
+                                            </div>
+                                        @else
+                                            <!-- Tampilan Normal Jika Tidak Ada Diskon -->
+                                            <span class="font-medium text-gray-950">Rp {{ number_format($item->harga, 0, ',', '.') }}</span>
+                                        @endif
+                                    </td>
                                     <td class="border border-gray-200 p-3 text-center">
                                         <a href="{{ route('layanan.edit', $item->id_layanan) }}" class="text-yellow-600 hover:underline mr-3">Edit</a>
                                         <form action="{{ route('layanan.destroy', $item->id_layanan) }}" method="POST" class="inline">
@@ -61,6 +82,9 @@
                             @endforelse
                         </tbody>
                     </table>
+                    <div class="mt-4">
+                        {{ $layanan->links() }}
+                    </div>
                 </div>
 
             </div>

@@ -20,5 +20,6 @@ class MasterLayanan extends Model
         'nama_layanan',
         'deskripsi',
         'harga',
+        'diskon',
     ];
 }

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nama_layanan');
             $table->text('deskripsi')->nullable();
             $table->integer('harga');
+            $table->integer('diskon')->default(0);
             $table->timestamps();
         });
     }

@@ -34,6 +34,7 @@ class ManajemenDokterController extends Controller
             'spesialis' => 'required',
             'jadwal_praktek' => 'required',
             'nomor_lisensi' => 'required',
+            'nomor_hp' => 'required',
             'alamat' => 'required',
         ]);
 
@@ -42,6 +43,7 @@ class ManajemenDokterController extends Controller
             'spesialis' => $request->spesialis,
             'jadwal_praktek' => $request->jadwal_praktek,
             'nomor_lisensi' => $request->nomor_lisensi,
+            'nomor_hp' => $request->nomor_hp,
             'alamat' => $request->alamat,
         ]);
 
@@ -77,6 +79,7 @@ class ManajemenDokterController extends Controller
             'spesialis' => 'required',
             'jadwal_praktek' => 'required',
             'nomor_lisensi' => 'required',
+            'nomor_hp' => 'required',
             'alamat' => 'required',
         ]);
 
@@ -86,6 +89,7 @@ class ManajemenDokterController extends Controller
             'spesialis' => $request->spesialis,
             'jadwal_praktek' => $request->jadwal_praktek,
             'nomor_lisensi' => $request->nomor_lisensi,
+            'nomor_hp' => $request->nomor_hp,
             'alamat' => $request->alamat,
         ]);
 

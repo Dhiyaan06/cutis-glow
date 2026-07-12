@@ -6,14 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class ManajemenDokter extends Model
 {
-    protected $table = 'manajemen_dokter';
+    protected $table = 'dokter';
+    protected $primaryKey = 'id_dokter';
 
     protected $fillable = [
-        'nama',
-        'spesialis',
-        'jadwal_praktek',
-        'nomor_lisensi',
-        'nomor_hp',
-        'alamat',
+    'id_pengguna',
+    'spesialis',
+    'no_str',
+    'no_hp',
+    'alamat',
+    'jadwal_praktek',
     ];
+    //relasi ke tabel users (pengguna)
+    public function pengguna()
+    {
+        return $this->belongsTo(User::class, 'id_pengguna', 'id_pengguna');
+    }
 }

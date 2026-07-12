@@ -11,7 +11,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -21,10 +20,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-Route::resource('layanan', MasterLayananController::class);
-Route::resource('pasien', ManajemenPasienController::class);
-Route::resource('booking-konsultasi', BookingKonsultasiController::class);
-Route::resource('dokter', ManajemenDokterController::class);
 
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::resource('layanan', MasterLayananController::class);
+    Route::resource('pasien', ManajemenPasienController::class);
+    Route::resource('booking-konsultasi', BookingKonsultasiController::class);
+    Route::resource('dokter', ManajemenDokterController::class);
+});
 
 require __DIR__.'/auth.php';

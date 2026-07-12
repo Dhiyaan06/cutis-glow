@@ -4,9 +4,14 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MasterLayananController;
 
+
+
+use App\Http\Controllers\BookingKonsultasiController;
+
 Route::get('/', function () {
     return view('welcome');
 });
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -18,5 +23,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 Route::resource('layanan', MasterLayananController::class);
+
+
+
+Route::resource('booking-konsultasi', BookingKonsultasiController::class);
 
 require __DIR__.'/auth.php';

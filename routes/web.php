@@ -3,13 +3,14 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MasterLayananController;
-
-
+use App\Http\Controllers\BookingKonsultasiController;
+use App\Http\Controllers\ManajemenDokterController;
 use App\Http\Controllers\ManajemenPasienController;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -22,5 +23,8 @@ Route::middleware('auth')->group(function () {
 });
 Route::resource('layanan', MasterLayananController::class);
 Route::resource('pasien', ManajemenPasienController::class);
+Route::resource('booking-konsultasi', BookingKonsultasiController::class);
+Route::resource('dokter', ManajemenDokterController::class);
+
 
 require __DIR__.'/auth.php';

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('no_str'); // Menggunakan string agar format nomor STR aman
             $table->string('no_hp');
             $table->text('alamat');
+            $table->string('jadwal_praktek');
             $table->timestamps();
         });
     }

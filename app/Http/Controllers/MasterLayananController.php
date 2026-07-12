@@ -10,12 +10,31 @@ class MasterLayananController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // 1. Pagination agar tampil 10 data per halaman
-        $layanan = MasterLayanan::paginate(10);
+        // 1. Ambil inputan dari request search & filter
+        $search = $request->input('search');
+        $filterDiskon = $request->input('filter_diskon');
 
-        // 2. Lempar datanya ke halaman view 'layanan.index'
+        // 2. Query dasar mengambil data layanan
+        $query = MasterLayanan::query();
+
+        // Logika Search: Jika ada input search, cari berdasarkan nama layanan
+        if ($search) {
+            $query->where('nama_layanan', 'like', '%' . $search . '%');
+        }
+
+        // Logika Filter: Filter berdasarkan status diskon
+        if ($filterDiskon === 'ada_diskon') {
+            $query->where('diskon', '>', 0);
+        } elseif ($filterDiskon === 'tanpa_diskon') {
+            $query->where('diskon', '=', 0);
+        }
+
+        // 3. Jalankan pagination (10 data per halaman) sambil mempertahankan parameter query di URL
+        $layanan = $query->paginate(10)->withQueryString();
+
+        // 4. Lempar data ke view
         return view('layanan.index', compact('layanan'));
     }
 

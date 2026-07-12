@@ -21,6 +21,19 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::resource('layanan', MasterLayananController::class);
+
+Route::resource('booking', BookingKonsultasiController::class);
+
+Route::get('/booking-riwayat', [BookingKonsultasiController::class, 'riwayat'])
+    ->name('booking.riwayat');
+
+Route::put('/booking/{id}/selesai', [BookingKonsultasiController::class, 'selesai'])
+    ->name('booking.selesai');
+
+Route::resource('dokter', ManajemenDokterController::class);
+
+
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('layanan', MasterLayananController::class);
     Route::resource('pasien', ManajemenPasienController::class);

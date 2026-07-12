@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MasterLayananController;
 use App\Http\Controllers\BookingKonsultasiController;
 use App\Http\Controllers\ManajemenDokterController;
-
+use App\Http\Controllers\ManajemenPasienController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,6 +22,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 Route::resource('layanan', MasterLayananController::class);
+Route::resource('pasien', ManajemenPasienController::class);
 Route::resource('booking-konsultasi', BookingKonsultasiController::class);
 Route::resource('dokter', ManajemenDokterController::class);
 

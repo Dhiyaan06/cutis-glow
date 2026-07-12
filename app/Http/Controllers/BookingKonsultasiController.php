@@ -3,47 +3,62 @@
 namespace App\Http\Controllers;
 
 use App\Models\BookingKonsultasi;
+use App\Models\ManajemenDokter;
+use App\Models\ManajemenPasien;
 use Illuminate\Http\Request;
 
 class BookingKonsultasiController extends Controller
 {
-    // Menampilkan semua booking
+    /**
+     * Menampilkan daftar booking.
+     */
     public function index()
     {
-        $booking = BookingKonsultasi::orderBy('jadwal_konsultasi', 'desc')->get();
+        $booking = BookingKonsultasi::orderBy('jadwal_konsultasi', 'desc')
+                    ->paginate(10);
 
         return view('booking.index', compact('booking'));
     }
 
-     // Menampilkan form booking
-    public function create()
-    {
-        return view('booking.create');
-    }
+    /**
+     * Menampilkan form tambah booking.
+     */
+   public function create()
+{
+    $pasien = ManajemenPasien::all();
+    $dokter = ManajemenDokter::all();
 
-     // Menyimpan data booking
+    return view('booking.create', compact('pasien', 'dokter'));
+}
+
+    /**
+     * Menyimpan data booking.
+     */
     public function store(Request $request)
     {
         $request->validate([
-            'id_pasien' => 'required',
-            'id_dokter' => 'required',
-            'jadwal_konsultasi' => 'required',
-            'keluhan' => 'required'
+            'id_pasien'           => 'required',
+            'id_dokter'           => 'required',
+            'jadwal_konsultasi'   => 'required',
+            'keluhan'             => 'required',
         ]);
 
         BookingKonsultasi::create([
-            'id_pasien' => $request->id_pasien,
-            'id_dokter' => $request->id_dokter,
-            'jadwal_konsultasi' => $request->jadwal_konsultasi,
-            'keluhan' => $request->keluhan,
-            'status_booking' => 'pending'
+            'id_pasien'          => $request->id_pasien,
+            'id_dokter'          => $request->id_dokter,
+            'jadwal_konsultasi'  => $request->jadwal_konsultasi,
+            'keluhan'            => $request->keluhan,
+            'status_booking'     => 'pending',
         ]);
 
-        return redirect()->route('booking.index')
-            ->with('success', 'Booking berhasil dibuat.');
+        return redirect()
+            ->route('booking.index')
+            ->with('success', 'Booking berhasil ditambahkan.');
     }
 
-     // Menampilkan detail booking
+    /**
+     * Detail booking.
+     */
     public function show($id)
     {
         $booking = BookingKonsultasi::findOrFail($id);
@@ -51,67 +66,85 @@ class BookingKonsultasiController extends Controller
         return view('booking.show', compact('booking'));
     }
 
-    // Form edit booking
+    /**
+     * Form edit booking.
+     */
     public function edit($id)
     {
-        $booking = BookingKonsultasi::findOrFail($id);
+    $booking = BookingKonsultasi::findOrFail($id);
+    $pasien = ManajemenPasien::all();
+    $dokter = ManajemenDokter::all();
 
-        return view('booking.edit', compact('booking'));
+    return view('booking.edit', compact('booking', 'pasien', 'dokter'));
     }
 
-    // Update booking
+    /**
+     * Update booking.
+     */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'id_pasien'           => 'required',
+            'id_dokter'           => 'required',
+            'jadwal_konsultasi'   => 'required',
+            'keluhan'             => 'required',
+            'status_booking'      => 'required',
+        ]);
+
         $booking = BookingKonsultasi::findOrFail($id);
 
-        $request->validate([
-            'id_pasien' => 'required',
-            'id_dokter' => 'required',
-            'jadwal_konsultasi' => 'required',
-            'keluhan' => 'required'
-        ]);
 
         $booking->update([
             'id_pasien' => $request->id_pasien,
             'id_dokter' => $request->id_dokter,
             'jadwal_konsultasi' => $request->jadwal_konsultasi,
-            'keluhan' => $request->keluhan
+            'status_booking' => $request->status_booking,
+            'keluhan' => $request->keluhan,
         ]);
 
-        return redirect()->route('booking.index')
+        return redirect()
+            ->route('booking.index')
             ->with('success', 'Booking berhasil diperbarui.');
     }
 
-
-    // Hapus booking
+    /**
+     * Hapus booking.
+     */
     public function destroy($id)
     {
         $booking = BookingKonsultasi::findOrFail($id);
 
         $booking->delete();
 
-        return redirect()->route('booking.index')
+        return redirect()
+            ->route('booking.index')
             ->with('success', 'Booking berhasil dihapus.');
     }
 
-
-    // Riwayat Booking
+    /**
+     * Riwayat booking.
+     */
     public function riwayat()
     {
-        $booking = BookingKonsultasi::orderBy('jadwal_konsultasi', 'desc')->get();
+        $booking = BookingKonsultasi::orderBy('jadwal_konsultasi', 'desc')
+                    ->paginate(10);
 
         return view('booking.riwayat', compact('booking'));
     }
 
-    // Mengubah status menjadi selesai
+    /**
+     * Ubah status booking menjadi selesai.
+     */
     public function selesai($id)
     {
         $booking = BookingKonsultasi::findOrFail($id);
 
-        $booking->status_booking = 'selesai';
-        $booking->save();
+        $booking->update([
+            'status_booking' => 'selesai'
+        ]);
 
-        return redirect()->back()
+        return redirect()
+            ->route('booking.riwayat')
             ->with('success', 'Status booking berhasil diubah menjadi selesai.');
     }
 }

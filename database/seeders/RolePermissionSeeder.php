@@ -21,7 +21,7 @@ class RolePermissionSeeder extends Seeder
         $pasienRole = Role::updateOrCreate(['name' => 'pasien']);
 
         // 2. Akun Admin
-        $admin = User::create([
+        $admin = User::firstOrCreate([
             'name' => 'Admin Cutis Glow',
             'email' => 'admin@cutisglow.com',
             'password' => Hash::make('password'),
@@ -31,7 +31,7 @@ class RolePermissionSeeder extends Seeder
         $admin->assignRole($adminRole);
 
         // 3. Akun Dokter
-        $dokter = User::create([
+        $dokter = User::firstOrCreate([
             'name' => 'Dr. Cutis Glow',
             'email' => 'dokter@cutisglow.com',
             'password' => Hash::make('password'),
@@ -41,7 +41,7 @@ class RolePermissionSeeder extends Seeder
         $dokter->assignRole($dokterRole);
 
         // 4. Akun Pasien
-        $pasien = User::create([
+        $pasien = User::firstOrCreate([
             'name' => 'Pasien Dami',
             'email' => 'pasien@cutisglow.com',
             'password' => Hash::make('password'),

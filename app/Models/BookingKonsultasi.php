@@ -15,8 +15,18 @@ class BookingKonsultasi extends Model
         'id_dokter',
         'jadwal_konsultasi',
         'status_booking',
-        'keluhan'
+        'keluhan',
     ];
 
     public $timestamps = true;
+
+    public function pasien()
+    {
+        return $this->belongsTo(ManajemenPasien::class, 'id_pasien', 'id_pasien');
+    }
+
+    public function dokter()
+    {
+        return $this->belongsTo(ManajemenDokter::class, 'id_dokter', 'id_dokter');
+    }
 }

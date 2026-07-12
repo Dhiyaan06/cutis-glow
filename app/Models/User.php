@@ -10,10 +10,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
-#[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
+
+    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, HasRoles;
 
     protected $table = 'users';
@@ -24,6 +24,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'no_hp',
+        'status_aktif'
     ];
 
     protected $hidden = [
@@ -34,6 +36,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'status_aktif' => 'boolean'
     ];
 
     public function pasien()
@@ -45,3 +48,4 @@ class User extends Authenticatable
         );
     }
 }
+

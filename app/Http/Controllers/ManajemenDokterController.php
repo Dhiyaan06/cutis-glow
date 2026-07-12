@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ManajemenDokter;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ManajemenDokterController extends Controller
@@ -12,7 +13,7 @@ class ManajemenDokterController extends Controller
      */
     public function index()
     {
-        $dokter = ManajemenDokter::all();
+        $dokter = ManajemenDokter::with('pengguna')->paginate(10);
         return view('manajemen-dokter.index', compact('dokter'));
     }
 
@@ -21,7 +22,8 @@ class ManajemenDokterController extends Controller
      */
     public function create()
     {
-        return view('manajemen-dokter.create');
+        $user = User::where('role', 'dokter')->get();
+        return view('manajemen-dokter.create', compact('user'));
     }
 
     /**
@@ -30,20 +32,20 @@ class ManajemenDokterController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required',
+            'id_pengguna' => 'required',
             'spesialis' => 'required',
             'jadwal_praktek' => 'required',
-            'nomor_lisensi' => 'required',
-            'nomor_hp' => 'required',
+            'no_str' => 'required',
+            'no_hp' => 'required',
             'alamat' => 'required',
         ]);
 
         ManajemenDokter::create([
-            'nama' => $request->nama,
+            'id_pengguna' => $request->id_pengguna,
             'spesialis' => $request->spesialis,
             'jadwal_praktek' => $request->jadwal_praktek,
-            'nomor_lisensi' => $request->nomor_lisensi,
-            'nomor_hp' => $request->nomor_hp,
+            'no_str' => $request->no_str,
+            'no_hp' => $request->no_hp,
             'alamat' => $request->alamat,
         ]);
 
@@ -56,7 +58,7 @@ class ManajemenDokterController extends Controller
      */
     public function show($id)
     {
-        $dokter = ManajemenDokter::findOrFail($id);
+        $dokter = ManajemenDokter::with('pengguna')->findOrFail($id);
         return view('manajemen-dokter.show', compact('dokter'));
     }
 
@@ -66,7 +68,8 @@ class ManajemenDokterController extends Controller
     public function edit($id)
     {
         $dokter = ManajemenDokter::findOrFail($id);
-        return view('dokter.edit', compact('dokter'));
+        $user = User::where('role', 'dokter')->get();
+        return view('manajemen-dokter.edit', compact('dokter'));
     }
 
     /**
@@ -75,21 +78,21 @@ class ManajemenDokterController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama' => 'required',
+            'id_pengguna' => 'required',
             'spesialis' => 'required',
             'jadwal_praktek' => 'required',
-            'nomor_lisensi' => 'required',
-            'nomor_hp' => 'required',
+            'no_str' => 'required',
+            'no_hp' => 'required',
             'alamat' => 'required',
         ]);
 
         $dokter = ManajemenDokter::findOrFail($id);
         $dokter->update([
-            'nama' => $request->nama,
+            'id_pengguna' => $request->id_pengguna,
             'spesialis' => $request->spesialis,
             'jadwal_praktek' => $request->jadwal_praktek,
-            'nomor_lisensi' => $request->nomor_lisensi,
-            'nomor_hp' => $request->nomor_hp,
+            'no_str' => $request->no_str,
+            'no_hp' => $request->no_hp,
             'alamat' => $request->alamat,
         ]);
 

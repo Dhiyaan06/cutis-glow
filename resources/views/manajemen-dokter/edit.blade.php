@@ -30,26 +30,15 @@
 
                     <!-- Nama Dokter -->
                     <div class="mb-4">
-                        <label for="id_pengguna" class="block text-gray-700 font-medium mb-2">
+                        <label class="block text-gray-700 font-medium mb-2">
                             Nama Dokter
                         </label>
-
-                        <select
-                            name="id_pengguna"
-                            id="id_pengguna"
-                            class="w-full border-gray-300 rounded-lg shadow-sm"
-                            required>
-
-                            <option value="">-- Pilih Dokter --</option>
-
-                            @foreach ($users as $user)
-                                <option value="{{ $user->id_pengguna }}"
-                                    {{ old('id_pengguna', $dokter->id_pengguna) == $user->id_pengguna ? 'selected' : '' }}>
-                                    {{ $user->name }}
-                                </option>
-                            @endforeach
-
-                        </select>
+                        <input
+                            type="text"
+                            name="nama"
+                            id="nama"
+                            value="{{ old('nama', $dokter->nama) }}"
+                            class="w-full border-gray-300 rounded-lg shadow-sm>
                     </div>
 
                     <!-- Spesialis -->

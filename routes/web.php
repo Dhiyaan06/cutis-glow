@@ -38,7 +38,6 @@ Route::get('/dashboard', function () {
 
     Route::put('/booking/{id}/selesai', [BookingKonsultasiController::class, 'selesai'])
         ->name('booking.selesai');
-});
 
 Route::resource('layanan', MasterLayananController::class);
 

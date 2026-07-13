@@ -13,13 +13,12 @@ return new class extends Migration
     {
         Schema::create('booking_konsultasi', function (Blueprint $table) {
             $table->id('id_booking');
-            // Relasi ke tabel pasien dan dokter
             $table->foreignId('id_pasien')->constrained('pasien', 'id_pasien')->onDelete('cascade');
             $table->foreignId('id_dokter')->constrained('dokter', 'id_dokter')->onDelete('cascade');
             $table->date('tanggal_booking');
             $table->time('jam_booking');
             $table->enum('status', ['pending', 'dikonfirmasi', 'selesai', 'dibatalkan'])->default('pending');
-            $table->text('keluhan')->nullable();
+            $table->text('catatan')->nullable(); // Keluhan/catatan pasien
             $table->timestamps();
         });
     }

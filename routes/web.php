@@ -1,65 +1,63 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MasterLayananController;
 use App\Http\Controllers\BookingKonsultasiController;
 use App\Http\Controllers\DokterController;
-use App\Http\Controllers\ManajemenPasienController;
-use App\Http\Controllers\DashboardController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\JadwalDokterController;
 use App\Http\Controllers\PasienController;
+use App\Http\Controllers\JadwalDokterController;
+use App\Http\Controllers\RiwayatLayananController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-   return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth'])
+    ->name('dashboard');
 
-    // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->name('dashboard');
-
-    Route::get('/dashboard', function () {
-       return view('dashboard');
-    })->middleware(['auth', 'verified'])->name('dashboard');
-
-
-    // Profile
+Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    // Booking
-    Route::resource('booking', BookingKonsultasiController::class);
-
-    Route::get('/booking-riwayat', [BookingKonsultasiController::class, 'riwayat'])
-        ->name('booking.riwayat');
-
-    Route::put('/booking/{id}/selesai', [BookingKonsultasiController::class, 'selesai'])
-        ->name('booking.selesai');
-
-Route::resource('layanan', MasterLayananController::class);
-
-Route::middleware(['auth'])->group(function () {
-Route::resource('booking', BookingKonsultasiController::class);
-
-Route::get('/booking-riwayat', [BookingKonsultasiController::class, 'riwayat'])
-    ->name('booking.riwayat');
-
-Route::put('/booking/{id}/selesai', [BookingKonsultasiController::class, 'selesai'])
-    ->name('booking.selesai');
 });
 
+// Shared Access to viewing resources, booking creation, and service list
+Route::middleware(['auth', 'role:admin|dokter|pasien'])->group(function () {
+    Route::get('layanan', [MasterLayananController::class, 'index'])->name('layanan.index');
 
+    Route::get('dokter', [DokterController::class, 'index'])->name('dokter.index');
+    Route::get('dokter/{id}', [DokterController::class, 'show'])->name('dokter.show');
+
+    Route::get('booking-konsultasi', [BookingKonsultasiController::class, 'index'])->name('booking-konsultasi.index');
+    Route::get('booking-konsultasi/create', [BookingKonsultasiController::class, 'create'])->name('booking-konsultasi.create');
+    Route::post('booking-konsultasi', [BookingKonsultasiController::class, 'store'])->name('booking-konsultasi.store');
+    Route::get('booking-konsultasi/{id}', [BookingKonsultasiController::class, 'show'])->name('booking-konsultasi.show');
+
+    Route::get('riwayat-layanan', [RiwayatLayananController::class, 'index'])->name('riwayat-layanan.index');
+});
+
+// Admin and Dokter Access to booking actions and writing treatment history
+Route::middleware(['auth', 'role:admin|dokter'])->group(function () {
+    Route::post('booking-konsultasi/{id}/konfirmasi', [BookingKonsultasiController::class, 'konfirmasi'])->name('booking-konsultasi.konfirmasi');
+    Route::post('booking-konsultasi/{id}/selesai', [BookingKonsultasiController::class, 'selesai'])->name('booking-konsultasi.selesai');
+    Route::post('booking-konsultasi/{id}/batal', [BookingKonsultasiController::class, 'batal'])->name('booking-konsultasi.batal');
+    Route::get('riwayat-layanan/create', [RiwayatLayananController::class, 'create'])->name('riwayat-layanan.create');
+    Route::post('riwayat-layanan', [RiwayatLayananController::class, 'store'])->name('riwayat-layanan.store');
+});
+
+// Admin-only Access to Management
 Route::middleware(['auth', 'role:admin'])->group(function () {
-
-    Route::resource('layanan', MasterLayananController::class);
+    Route::resource('layanan', MasterLayananController::class)->except(['index']);
+    Route::resource('dokter', DokterController::class)->except(['index', 'show']);
     Route::resource('pasien', PasienController::class);
-    Route::resource('dokter', DokterController::class);
+    Route::resource('booking-konsultasi', BookingKonsultasiController::class)->except(['index', 'show', 'create', 'store', 'konfirmasi', 'selesai', 'batal']);
+
     Route::resource('jadwal-dokter', JadwalDokterController::class);
+    Route::resource('riwayat-layanan', RiwayatLayananController::class)->except(['index', 'create', 'store']);
+
 
 });
 

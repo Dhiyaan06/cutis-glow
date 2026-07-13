@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Pasien;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use Spatie\Permission\Models\Role;
 
 class RegisteredUserController extends Controller
 {
@@ -41,6 +43,21 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'no_hp' => '',
+            'role' => 'pasien',
+            'status_aktif' => 'aktif',
+        ]);
+
+        // Assign Spatie Role
+        $role = Role::findOrCreate('pasien');
+        $user->assignRole($role);
+
+        // Buat Pasien Profile
+        Pasien::create([
+            'id_pengguna' => $user->id_pengguna,
+            'no_hp' => '',
+            'alamat' => '',
+            'tanggal_lahir' => now()->toDateString(),
+            'jenis_kelamin' => 'P'
         ]);
 
         event(new Registered($user));

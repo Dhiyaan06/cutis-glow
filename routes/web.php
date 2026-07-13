@@ -12,9 +12,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-//Route::get('/dashboard', function () {
-//    return view('dashboard');
-//})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', function () {
+   return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('layanan', MasterLayananController::class);
 
+Route::middleware(['auth'])->group(function () {
 Route::resource('booking', BookingKonsultasiController::class);
 
 Route::get('/booking-riwayat', [BookingKonsultasiController::class, 'riwayat'])
@@ -31,6 +32,7 @@ Route::get('/booking-riwayat', [BookingKonsultasiController::class, 'riwayat'])
 
 Route::put('/booking/{id}/selesai', [BookingKonsultasiController::class, 'selesai'])
     ->name('booking.selesai');
+});
 
 Route::resource('dokter', ManajemenDokterController::class);
 

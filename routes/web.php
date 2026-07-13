@@ -3,10 +3,11 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MasterLayananController;
 use App\Http\Controllers\BookingKonsultasiController;
-use App\Http\Controllers\ManajemenDokterController;
+use App\Http\Controllers\DokterController;
 use App\Http\Controllers\ManajemenPasienController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\JadwalDokterController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -38,7 +39,6 @@ Route::get('/dashboard', function () {
 
     Route::put('/booking/{id}/selesai', [BookingKonsultasiController::class, 'selesai'])
         ->name('booking.selesai');
-});
 
 Route::resource('layanan', MasterLayananController::class);
 
@@ -52,14 +52,13 @@ Route::put('/booking/{id}/selesai', [BookingKonsultasiController::class, 'selesa
     ->name('booking.selesai');
 });
 
-Route::resource('dokter', ManajemenDokterController::class);
-
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::resource('layanan', MasterLayananController::class);
     Route::resource('pasien', ManajemenPasienController::class);
-    Route::resource('dokter', ManajemenDokterController::class);
+    Route::resource('dokter', DokterController::class);
+    Route::resource('jadwal-dokter', JadwalDokterController::class);
 
 });
 

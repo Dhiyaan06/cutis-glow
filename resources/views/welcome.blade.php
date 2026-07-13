@@ -24,6 +24,7 @@
 
                     @auth
 
+<<<<<<< HEAD
                         <a href="{{ url('/dashboard') }}"
                             class="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg transition">
                             Dashboard
@@ -36,6 +37,20 @@
                             Login
                         </a>
 
+=======
+                        <a href="{{ url('/register') }}"
+                            class="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg transition">
+                            Register
+                        </a>
+
+                    @else
+
+                        <a href="{{ route('login') }}"
+                            class="text-gray-600 hover:text-pink-500 transition">
+                            Login
+                        </a>
+
+>>>>>>> e38a7db3b0c20e0cde948b84c3e994a10207c534
                         @if(Route::has('register'))
 
                             <a href="{{ route('register') }}"
@@ -138,7 +153,11 @@
                                 </p>
                             </div>
 
+<<<<<<< HEAD
                         
+=======
+
+>>>>>>> e38a7db3b0c20e0cde948b84c3e994a10207c534
                         </div>
 
                     </div>

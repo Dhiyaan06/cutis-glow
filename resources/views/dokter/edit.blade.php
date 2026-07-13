@@ -72,10 +72,41 @@
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700">Jadwal Praktek (Keterangan Singkat)</label>
-                        <input type="text" name="jadwal_praktek" value="{{ old('jadwal_praktek', $dokter->jadwal_praktek) }}" required
-                            class="w-full mt-1 border-pink-200 rounded-md focus:ring-pink-500 focus:border-pink-500 text-sm">
+                    <!-- BAGIAN REPEATER JADWAL -->
+                    <div class="border border-pink-100 p-4 rounded-md bg-pink-50/30">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Jadwal Praktek Dokter</label>
+
+                        <div id="jadwal-container" class="space-y-3">
+                            @foreach($jadwalList as $index => $jadwal)
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end jadwal-row">
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-500">Hari</label>
+                                    <input type="text" name="hari[]" value="{{ old('hari.'.$index, $jadwal['hari']) }}" required placeholder="e.g. Senin"
+                                        class="w-full mt-1 border-pink-200 rounded-md focus:ring-pink-500 focus:border-pink-500 text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-500">Jam Mulai</label>
+                                    <input type="time" name="jam_mulai[]" value="{{ old('jam_mulai.'.$index, $jadwal['jam_mulai']) }}" required
+                                        class="w-full mt-1 border-pink-200 rounded-md focus:ring-pink-500 focus:border-pink-500 text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-500">Jam Selesai</label>
+                                    <div class="flex gap-2">
+                                        <input type="time" name="jam_selesai[]" value="{{ old('jam_selesai.'.$index, $jadwal['jam_selesai']) }}" required
+                                            class="w-full mt-1 border-pink-200 rounded-md focus:ring-pink-500 focus:border-pink-500 text-sm">
+                                        <!-- Tombol Hapus hanya tampil jika bukan baris pertama -->
+                                        <button type="button" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md text-sm btn-hapus-jadwal {{ $loop->first ? 'hidden' : '' }}">
+                                            Hapus
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+
+                        <button type="button" id="btn-tambah-jadwal" class="mt-3 text-xs bg-pink-100 text-pink-700 px-3 py-1.5 rounded font-semibold hover:bg-pink-200 transition">
+                            + Tambah Hari/Jam Lain
+                        </button>
                     </div>
 
                     <div>
@@ -96,4 +127,25 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('btn-tambah-jadwal').addEventListener('click', function() {
+            const container = document.getElementById('jadwal-container');
+            const newRow = container.children[0].cloneNode(true);
+
+            // Reset nilai input
+            newRow.querySelectorAll('input').forEach(input => input.value = '');
+
+            // Tampilkan tombol hapus
+            newRow.querySelector('.btn-hapus-jadwal').classList.remove('hidden');
+
+            container.appendChild(newRow);
+        });
+
+        document.getElementById('jadwal-container').addEventListener('click', function(e) {
+            if (e.target.classList.contains('btn-hapus-jadwal')) {
+                e.target.closest('.jadwal-row').remove();
+            }
+        });
+    </script>
 </x-app-layout>

@@ -44,18 +44,20 @@ class DokterController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-            'spesialis' => 'required|string|max:255',
-            'no_str' => 'required|string|max:255',
-            'no_hp' => 'required|string|max:20',
-            'alamat' => 'required|string',
-            'jadwal_praktek' => 'required|string',
-            'status_aktif' => 'required|in:aktif,nonaktif',
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users',
+        'password' => 'required|string|min:8',
+        'spesialis' => 'required|string|max:255',
+        'no_str' => 'required|string|max:255',
+        'no_hp' => 'required|string|max:20',
+        'alamat' => 'required|string',
+        'hari' => 'required|array',
+        'hari.*' => 'required|string',
+        'jam_mulai' => 'required|array',
+        'jam_selesai' => 'required|array',
+        'status_aktif' => 'required|in:aktif,nonaktif',
         ]);
 
-        // 1. Buat User
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -65,18 +67,25 @@ class DokterController extends Controller
             'status_aktif' => $request->status_aktif,
         ]);
 
-        // Assign Spatie Role
         $dokterRole = Role::findOrCreate('dokter');
         $user->assignRole($dokterRole);
 
-        // 2. Buat Dokter
+        // LOOPING UNTUK MENGGABUNGKAN BANYAK JADWAL
+        $daftarJadwal = [];
+        foreach ($request->hari as $index => $hari) {
+            $daftarJadwal[] = $hari . ' (' . $request->jam_mulai[$index] . ' - ' . $request->jam_selesai[$index] . ')';
+        }
+        // Hasil gabungan berupa string dipisah tanda '|'
+        // Contoh: "Senin (08:00 - 12:00) | Rabu (13:00 - 16:00)"
+        $jadwalGabungan = implode(' | ', $daftarJadwal);
+
         Dokter::create([
             'id_pengguna' => $user->id_pengguna,
             'spesialis' => $request->spesialis,
             'no_str' => $request->no_str,
             'no_hp' => $request->no_hp,
             'alamat' => $request->alamat,
-            'jadwal_praktek' => $request->jadwal_praktek,
+            'jadwal_praktek' => $jadwalGabungan,
         ]);
 
         return redirect()->route('dokter.index')->with('success', 'Dokter berhasil ditambahkan!');
@@ -90,8 +99,28 @@ class DokterController extends Controller
 
     public function edit($id)
     {
-        $dokter = Dokter::with('user')->findOrFail($id);
-        return view('dokter.edit', compact('dokter'));
+        $dokter = Dokter::findOrFail($id);
+        $jadwalList = [];
+
+        // Pecah string database berdasarkan pemisah ' | '
+        $rawJadwal = explode(' | ', $dokter->jadwal_praktek);
+
+        foreach ($rawJadwal as $j) {
+            if (preg_match('/^(.*?)\s*\((.*?)\s*-\s*(.*?)\)$/', $j, $matches)) {
+                $jadwalList[] = [
+                    'hari' => trim($matches[1]),
+                    'jam_mulai' => trim($matches[2]),
+                    'jam_selesai' => trim($matches[3]),
+                ];
+            }
+        }
+
+        // Jika data kosong, beri 1 baris kosong sebagai default
+        if (empty($jadwalList)) {
+            $jadwalList[] = ['hari' => '', 'jam_mulai' => '', 'jam_selesai' => ''];
+        }
+
+        return view('dokter.edit', compact('dokter', 'jadwalList'));
     }
 
     public function update(Request $request, $id)
@@ -107,23 +136,23 @@ class DokterController extends Controller
             'no_str' => 'required|string|max:255',
             'no_hp' => 'required|string|max:20',
             'alamat' => 'required|string',
-            'jadwal_praktek' => 'required|string',
+            'hari' => 'required|array',
+            'jam_mulai' => 'required|array',
+            'jam_selesai' => 'required|array',
             'status_aktif' => 'required|in:aktif,nonaktif',
         ]);
 
         // Update User
-        $userData = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'no_hp' => $request->no_hp,
-            'status_aktif' => $request->status_aktif,
-        ];
-
-        if ($request->filled('password')) {
-            $userData['password'] = Hash::make($request->password);
-        }
-
+        $userData = ['name' => $request->name, 'email' => $request->email, 'no_hp' => $request->no_hp, 'status_aktif' => $request->status_aktif];
+        if ($request->filled('password')) { $userData['password'] = Hash::make($request->password); }
         $user->update($userData);
+
+        // Gabungkan array jadwal baru
+        $daftarJadwal = [];
+        foreach ($request->hari as $index => $hari) {
+            $daftarJadwal[] = $hari . ' (' . $request->jam_mulai[$index] . ' - ' . $request->jam_selesai[$index] . ')';
+        }
+        $jadwalGabungan = implode(' | ', $daftarJadwal);
 
         // Update Dokter
         $dokter->update([
@@ -131,7 +160,7 @@ class DokterController extends Controller
             'no_str' => $request->no_str,
             'no_hp' => $request->no_hp,
             'alamat' => $request->alamat,
-            'jadwal_praktek' => $request->jadwal_praktek,
+            'jadwal_praktek' => $jadwalGabungan,
         ]);
 
         return redirect()->route('dokter.index')->with('success', 'Data dokter berhasil diperbarui!');
@@ -142,7 +171,6 @@ class DokterController extends Controller
         $dokter = Dokter::findOrFail($id);
         $user = User::findOrFail($dokter->id_pengguna);
 
-        // Hapus dokter dan user terkait (akan terhapus cascade di db tapi hapus user manual agar bersih)
         $dokter->delete();
         $user->delete();
 

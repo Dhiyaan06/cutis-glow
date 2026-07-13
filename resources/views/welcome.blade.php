@@ -26,19 +26,19 @@
         <!-- Navbar -->
         <header class="w-full bg-white/70 backdrop-blur-md sticky top-0 z-50 border-b border-pink-100">
             <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+
                 <!-- Logo -->
-                <a href="/" class="flex items-center gap-2 group">
-                    @if(\App\Models\Setting::get('clinic_logo'))
-                        <img src="{{ asset(\App\Models\Setting::get('clinic_logo')) }}" class="w-10 h-10 rounded-full border border-pink-200 object-cover shadow-sm group-hover:scale-105 transition-transform duration-200" alt="Logo">
-                    @else
-                        <div class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center border border-pink-200 shadow-sm shadow-pink-100 group-hover:scale-105 transition-transform duration-200">
-                            <svg class="w-5 h-5 text-pink-500" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2L14.7 9.3L22 12L14.7 14.7L12 22L9.3 14.7L2 12L9.3 9.3L12 2Z"/>
-                            </svg>
-                        </div>
-                    @endif
-                    <span class="serif-title text-xl font-bold text-pink-600 tracking-wide">{{ \App\Models\Setting::get('clinic_name', 'Cutis Glow') }}</span>
-                </a>
+            <a href="/" class="flex items-center gap-2 group">
+            <div class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center border border-pink-200 shadow-sm shadow-pink-100 group-hover:scale-105 transition-transform duration-200">
+            <svg class="w-5 h-5 text-pink-500" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2L14.7 9.3L22 12L14.7 14.7L12 22L9.3 14.7L2 12L9.3 9.3L12 2Z"/>
+            </svg>
+            </div>
+
+    <span class="serif-title text-xl font-bold text-pink-600 tracking-wide">
+        Cutis Glow
+    </span>
+</a>
 
                 <!-- Navigation Action -->
                 <div>
@@ -80,7 +80,7 @@
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-2">
                         @auth
-                            <a href="{{ route('bookings.index') }}" class="px-8 py-3.5 bg-pink-500 hover:bg-pink-400 text-white font-bold rounded-full shadow-lg shadow-pink-200 tracking-wide transition duration-150 text-center">
+                            <a href="{{ route('booking-konsultasi.index') }}" class="px-8 py-3.5 bg-pink-500 hover:bg-pink-400 text-white font-bold rounded-full shadow-lg shadow-pink-200 tracking-wide transition duration-150 text-center">
                                 Booking Konsultasi
                             </a>
                         @else

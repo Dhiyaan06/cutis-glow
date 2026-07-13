@@ -27,9 +27,9 @@ Route::middleware('auth')->group(function () {
 // Shared Access to viewing resources, booking creation, and service list
 Route::middleware(['auth', 'role:admin|dokter|pasien'])->group(function () {
     Route::get('layanan', [MasterLayananController::class, 'index'])->name('layanan.index');
-
     Route::get('dokter', [DokterController::class, 'index'])->name('dokter.index');
-    Route::get('dokter/{id}', [DokterController::class, 'show'])->name('dokter.show');
+
+    // NOTE: Route get('dokter/{id}') dipindahkan ke paling bawah file ini agar tidak bentrok dengan dokter/create
 
     Route::get('booking-konsultasi', [BookingKonsultasiController::class, 'index'])->name('booking-konsultasi.index');
     Route::get('booking-konsultasi/create', [BookingKonsultasiController::class, 'create'])->name('booking-konsultasi.create');
@@ -51,14 +51,17 @@ Route::middleware(['auth', 'role:admin|dokter'])->group(function () {
 // Admin-only Access to Management
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('layanan', MasterLayananController::class)->except(['index']);
-    Route::resource('dokter', DokterController::class)->except(['index', 'show']);
+    Route::resource('dokter', DokterController::class)->except(['index', 'show']); // Di sini dokter/create dibuat
     Route::resource('pasien', PasienController::class);
     Route::resource('booking-konsultasi', BookingKonsultasiController::class)->except(['index', 'show', 'create', 'store', 'konfirmasi', 'selesai', 'batal']);
 
     Route::resource('jadwal-dokter', JadwalDokterController::class);
     Route::resource('riwayat-layanan', RiwayatLayananController::class)->except(['index', 'create', 'store']);
+});
 
-
+// Route berparameter/wildcard ditaruh di paling bawah agar tidak memakan URL spesifik (seperti dokter/create)
+Route::middleware(['auth', 'role:admin|dokter|pasien'])->group(function () {
+    Route::get('dokter/{id}', [DokterController::class, 'show'])->name('dokter.show');
 });
 
 require __DIR__.'/auth.php';

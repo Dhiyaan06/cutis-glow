@@ -17,8 +17,9 @@ class User extends Authenticatable
     use HasFactory, Notifiable, HasRoles;
 
     protected $table = 'users';
-
     protected $primaryKey = 'id_pengguna';
+    public $incrementing = true;
+    protected $keyType = 'int';
 
     protected $fillable = [
         'name',
@@ -43,6 +44,15 @@ class User extends Authenticatable
     {
         return $this->hasOne(
             Pasien::class,
+            'id_pengguna',
+            'id_pengguna'
+        );
+    }
+
+    public function dokter()
+    {
+        return $this->hasOne(
+            Dokter::class,
             'id_pengguna',
             'id_pengguna'
         );

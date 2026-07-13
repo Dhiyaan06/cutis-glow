@@ -3,17 +3,18 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
-                <!-- Logo -->
+                <!--logo-->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}" class="flex items-center space-x-2">
-                        @if(\App\Models\Setting::get('clinic_logo'))
-                            <img src="{{ asset(\App\Models\Setting::get('clinic_logo')) }}" alt="Cutis Glow Logo" class="block h-10 w-auto rounded-full border-2 border-pink-200 shadow-sm object-cover">
-                        @else
-                            <img src="/logo.png" alt="Cutis Glow Logo" class="block h-10 w-auto rounded-full border-2 border-pink-200 shadow-sm">
-                        @endif
-                        <span class="font-bold text-pink-600 text-lg tracking-wide hidden sm:block">{{ \App\Models\Setting::get('clinic_name', 'Cutis Glow') }}</span>
-                    </a>
-                </div>
+                <a href="{{ route('dashboard') }}" class="flex items-center space-x-2">
+                    <img src="{{ asset('logo.jpeg') }}"
+                        alt="Cutis Glow Logo"
+                        class="block h-10 w-auto rounded-full border-2 border-pink-200 shadow-sm object-cover">
+
+                    <span class="font-bold text-pink-600 text-lg tracking-wide hidden sm:block">
+                        Cutis Glow
+                    </span>
+                </a>
+            </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-6 sm:-my-px sm:ms-10 sm:flex">

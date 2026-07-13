@@ -42,7 +42,7 @@ class User extends Authenticatable
     public function pasien()
     {
         return $this->hasOne(
-            ManajemenPasien::class,
+            Pasien::class,
             'id_pengguna',
             'id_pengguna'
         );

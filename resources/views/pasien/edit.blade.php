@@ -1,85 +1,95 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-pink-600 leading-tight">
             {{ __('Edit Data Pasien') }}
         </h2>
     </x-slot>
 
-    <div class="py-8">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6">
+    <div class="py-12">
+        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 border-t-4 border-pink-400">
+                <h3 class="text-lg font-bold text-gray-700 mb-6">Edit Profil Pasien: {{ $pasien->user->name }}</h3>
 
-                    @if ($errors->any())
-                        <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                            <ul class="list-disc ml-5">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
+                @if ($errors->any())
+                    <div class="bg-red-50 border border-red-200 text-red-700 p-3 rounded-md mb-6 text-sm">
+                        <ul class="list-disc pl-5">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <form action="{{ route('pasien.update', $pasien->id_pasien) }}" method="POST" class="space-y-4">
+                    @csrf
+                    @method('PUT')
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700">Nama Lengkap Pasien</label>
+                        <input type="text" name="name" value="{{ old('name', $pasien->user->name) }}" required
+                            class="w-full mt-1 border-pink-200 rounded-md focus:ring-pink-500 focus:border-pink-500 text-sm">
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700">Email (Untuk Login)</label>
+                            <input type="email" name="email" value="{{ old('email', $pasien->user->email) }}" required
+                                class="w-full mt-1 border-pink-200 rounded-md focus:ring-pink-500 focus:border-pink-500 text-sm">
                         </div>
-                    @endif
-
-                    <form action="{{ route('pasien.update', $pasien->id_pasien) }}" method="POST">
-                        @csrf
-                        @method('PUT')
-
-                        <div class="mb-4">
-                            <label class="block font-medium mb-2">Nama</label>
-                            <input type="text" name="name" value="{{ old('name', $pasien->nama) }}"
-                                class="w-full border rounded px-3 py-2" required>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700">Password Baru (Biarkan kosong jika tidak diganti)</label>
+                            <input type="password" name="password" placeholder="Minimal 8 karakter"
+                                class="w-full mt-1 border-pink-200 rounded-md focus:ring-pink-500 focus:border-pink-500 text-sm">
                         </div>
+                    </div>
 
-                        <div class="mb-4">
-                            <label class="block font-medium mb-2">Email</label>
-                            <input type="email" name="email" value="{{ old('email', $pasien->email) }}"
-                                class="w-full border rounded px-3 py-2" required>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700">Tanggal Lahir</label>
+                            <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir', $pasien->tanggal_lahir) }}" required
+                                class="w-full mt-1 border-pink-200 rounded-md focus:ring-pink-500 focus:border-pink-500 text-sm">
                         </div>
-
-                        <div class="mb-4">
-                            <label class="block font-medium mb-2">No HP</label>
-                            <input type="text" name="no_hp" value="{{ old('no_hp', $pasien->no_hp) }}"
-                                class="w-full border rounded px-3 py-2" required>
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="block font-medium mb-2">Jenis Kelamin</label>
-                            <select name="jenis_kelamin" class="w-full border rounded px-3 py-2" required>
-                                <option value="L" {{ old('jenis_kelamin', $pasien->jenis_kelamin) == 'L' ? 'selected' : '' }}>
-                                    Laki-laki
-                                </option>
-                                <option value="P" {{ old('jenis_kelamin', $pasien->jenis_kelamin) == 'P' ? 'selected' : '' }}>
-                                    Perempuan
-                                </option>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700">Jenis Kelamin</label>
+                            <select name="jenis_kelamin" required
+                                class="w-full mt-1 border-pink-200 rounded-md focus:ring-pink-500 focus:border-pink-500 text-sm">
+                                <option value="P" {{ old('jenis_kelamin', $pasien->jenis_kelamin) == 'P' ? 'selected' : '' }}>Perempuan (P)</option>
+                                <option value="L" {{ old('jenis_kelamin', $pasien->jenis_kelamin) == 'L' ? 'selected' : '' }}>Laki-laki (L)</option>
                             </select>
                         </div>
+                    </div>
 
-                        <div class="mb-4">
-                            <label class="block font-medium mb-2">Tanggal Lahir</label>
-                            <input type="date" name="tanggal_lahir"
-                                value="{{ old('tanggal_lahir', $pasien->tanggal_lahir?->format('Y-m-d')) }}"
-                                class="w-full border rounded px-3 py-2" required>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700">Nomor HP</label>
+                            <input type="text" name="no_hp" value="{{ old('no_hp', $pasien->no_hp) }}" required
+                                class="w-full mt-1 border-pink-200 rounded-md focus:ring-pink-500 focus:border-pink-500 text-sm">
                         </div>
-
-                        <div class="mb-4">
-                            <label class="block font-medium mb-2">Alamat</label>
-                            <textarea name="alamat" rows="4" class="w-full border rounded px-3 py-2"
-                                required>{{ old('alamat', $pasien->alamat) }}</textarea>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700">Status Aktif</label>
+                            <select name="status_aktif" required
+                                class="w-full mt-1 border-pink-200 rounded-md focus:ring-pink-500 focus:border-pink-500 text-sm">
+                                <option value="aktif" {{ old('status_aktif', $pasien->user->status_aktif) == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                                <option value="nonaktif" {{ old('status_aktif', $pasien->user->status_aktif) == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                            </select>
                         </div>
+                    </div>
 
-                        <div class="flex gap-3">
-                            <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-2 rounded">
-                                Update
-                            </button>
-                            <a href="{{ route('pasien.index') }}"
-                                class="bg-gray-500 hover:bg-gray-600 text-white px-5 py-2 rounded">
-                                Kembali
-                            </a>
-                        </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700">Alamat Tempat Tinggal</label>
+                        <textarea name="alamat" rows="3" required
+                            class="w-full mt-1 border-pink-200 rounded-md focus:ring-pink-500 focus:border-pink-500 text-sm">{{ old('alamat', $pasien->alamat) }}</textarea>
+                    </div>
 
-                    </form>
-
-                </div>
+                    <div class="flex justify-end gap-2 pt-4">
+                        <a href="{{ route('pasien.index') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md font-medium text-sm transition">
+                            Batal
+                        </a>
+                        <button type="submit" class="bg-pink-600 hover:bg-pink-700 text-white px-5 py-2 rounded-md font-semibold text-sm transition shadow-sm">
+                            Perbarui Pasien
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

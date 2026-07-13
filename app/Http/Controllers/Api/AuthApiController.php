@@ -4,12 +4,63 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Pasien;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
+use Spatie\Permission\Models\Role;
 
 class AuthApiController extends Controller
 {
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+            'no_hp' => 'required|string|max:20',
+            'alamat' => 'required|string',
+            'tanggal_lahir' => 'required|date',
+            'jenis_kelamin' => 'required|in:L,P',
+        ]);
+
+        // 1. Buat User
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'no_hp' => $request->no_hp,
+            'role' => 'pasien',
+            'status_aktif' => 'aktif',
+        ]);
+
+        // Assign Role
+        $role = Role::findOrCreate('pasien');
+        $user->assignRole($role);
+
+        // 2. Buat Pasien Profile
+        Pasien::create([
+            'id_pengguna' => $user->id_pengguna,
+            'no_hp' => $request->no_hp,
+            'alamat' => $request->alamat,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'jenis_kelamin' => $request->jenis_kelamin,
+        ]);
+
+        $token = $user->createToken('flutter-token')->plainTextToken;
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Registrasi berhasil',
+            'token' => $token,
+            'user' => [
+                'id_pengguna' => $user->id_pengguna,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => 'pasien',
+            ]
+        ], 201);
+    }
+
     public function login(Request $request)
     {
         $request->validate([
@@ -19,7 +70,6 @@ class AuthApiController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        // Cek user ada dan password-nya cocok
         if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json([
                 'status' => 'error',
@@ -27,7 +77,6 @@ class AuthApiController extends Controller
             ], 401);
         }
 
-        // 🔐 Bikin Token buat Flutter + bawa data Role Spatie-nya
         $token = $user->createToken('flutter-token')->plainTextToken;
 
         return response()->json([
@@ -35,17 +84,16 @@ class AuthApiController extends Controller
             'message' => 'Login Berhasil',
             'token' => $token,
             'user' => [
-                'id' => $user->id,
+                'id_pengguna' => $user->id_pengguna,
                 'name' => $user->name,
                 'email' => $user->email,
-                'role' => $user->getRoleNames()->first(), // ⬅️ Mengirim role ke Flutter
+                'role' => $user->getRoleNames()->first() ?? $user->role,
             ]
         ]);
     }
 
     public function logout(Request $request)
     {
-        // Hapus token yang sedang digunakan saat logout
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([

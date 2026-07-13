@@ -8,6 +8,7 @@ use App\Http\Controllers\ManajemenPasienController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JadwalDokterController;
+use App\Http\Controllers\PasienController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -56,7 +57,7 @@ Route::put('/booking/{id}/selesai', [BookingKonsultasiController::class, 'selesa
 Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::resource('layanan', MasterLayananController::class);
-    Route::resource('pasien', ManajemenPasienController::class);
+    Route::resource('pasien', PasienController::class);
     Route::resource('dokter', DokterController::class);
     Route::resource('jadwal-dokter', JadwalDokterController::class);
 

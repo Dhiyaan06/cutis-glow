@@ -6,16 +6,15 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
+    /*
      * Run the migrations.
      */
     public function up(): void
     {
         Schema::create('pasien', function (Blueprint $table) {
             $table->id('id_pasien');
-            $table->string('nama');
-            $table->string('email')->unique();
-            $table->string('password');
+            // Relasi FK ke tabel users (pengguna) menggunakan id_pengguna
+            $table->foreignId('id_pengguna')->constrained('users', 'id_pengguna')->onDelete('cascade');
             $table->string('no_hp');
             $table->text('alamat');
             $table->date('tanggal_lahir');

@@ -12,15 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('jadwal_dokter', function (Blueprint $table) {
-            $table->id();
+            $table->id('id_jadwal');
             $table->foreignId('id_dokter')
-            ->constrained('manajemendokter')
-            ->cascadeOnDelete();
-
+            ->constrained('dokter', 'id_dokter')
+            ->onDelete('cascade');
+            $table->string('hari');
             $table->date('tanggal');
             $table->time('jam_mulai');
             $table->time('jam_selesai');
-            $table->enum('status', ['tersedia', 'tidak tersedia'])->default('tersedia');
+            $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
             $table->timestamps();
         });
     }

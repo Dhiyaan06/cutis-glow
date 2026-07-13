@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('dokter', function (Blueprint $table) {
             $table->id('id_dokter');
-            
+            //relasi FK ke tabel users
+            $table->foreignId('user_id')->constrained('users','id_pengguna')->onDelete('cascade');
             $table->string('nama');
             $table->string('spesialis');
             $table->string('no_str'); // Menggunakan string agar format nomor STR aman

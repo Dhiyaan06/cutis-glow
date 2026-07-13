@@ -12,7 +12,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware(['auth'])->group(function () {
+Route::get('/dashboard', function () {
+   return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])
@@ -37,6 +39,20 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/booking/{id}/selesai', [BookingKonsultasiController::class, 'selesai'])
         ->name('booking.selesai');
 });
+
+Route::resource('layanan', MasterLayananController::class);
+
+Route::middleware(['auth'])->group(function () {
+Route::resource('booking', BookingKonsultasiController::class);
+
+Route::get('/booking-riwayat', [BookingKonsultasiController::class, 'riwayat'])
+    ->name('booking.riwayat');
+
+Route::put('/booking/{id}/selesai', [BookingKonsultasiController::class, 'selesai'])
+    ->name('booking.selesai');
+});
+
+Route::resource('dokter', ManajemenDokterController::class);
 
 
 Route::middleware(['auth', 'role:admin'])->group(function () {

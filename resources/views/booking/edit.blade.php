@@ -1,164 +1,88 @@
 <x-app-layout>
-
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Edit Booking') }}
+        <h2 class="font-semibold text-xl text-pink-600 leading-tight">
+            {{ __('Edit Booking Konsultasi') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
-
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-
-            <div class="bg-white shadow-sm sm:rounded-lg p-6">
+        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 border-t-4 border-pink-400">
+                <h3 class="text-lg font-bold text-gray-700 mb-6">Edit Booking #BK-{{ $booking->id_booking }}</h3>
 
                 @if ($errors->any())
-
-                    <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-
-                        <ul class="list-disc ml-5">
-
+                    <div class="bg-red-50 border border-red-200 text-red-700 p-3 rounded-md mb-6 text-sm">
+                        <ul class="list-disc pl-5">
                             @foreach ($errors->all() as $error)
-
                                 <li>{{ $error }}</li>
-
                             @endforeach
-
                         </ul>
-
                     </div>
-
                 @endif
 
-                <form action="{{ route('booking.update', $booking->id_booking) }}" method="POST">
-
+                <form action="{{ route('booking-konsultasi.update', $booking->id_booking) }}" method="POST" class="space-y-4">
                     @csrf
                     @method('PUT')
 
-                    <!-- ID Pasien -->
-                    <div class="mb-5">
-
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            ID Pasien
-                        </label>
-
-                        <input
-                            type="number"
-                            name="id_pasien"
-                            value="{{ old('id_pasien', $booking->id_pasien) }}"
-                            class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                            required>
-
-                    </div>
-
-                    <!-- ID Dokter -->
-                    <div class="mb-5">
-
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            ID Dokter
-                        </label>
-
-                        <input
-                            type="number"
-                            name="id_dokter"
-                            value="{{ old('id_dokter', $booking->id_dokter) }}"
-                            class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                            required>
-
-                    </div>
-
-                    <!-- Jadwal -->
-                    <div class="mb-5">
-
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Jadwal Konsultasi
-                        </label>
-
-                        <input
-                            type="datetime-local"
-                            name="jadwal_konsultasi"
-                            value="{{ date('Y-m-d\TH:i', strtotime($booking->jadwal_konsultasi)) }}"
-                            class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                            required>
-
-                    </div>
-
-                    <!-- Status -->
-                    <div class="mb-5">
-
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Status Booking
-                        </label>
-
-                        <select
-                            name="status_booking"
-                            class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
-
-                            <option value="pending"
-                                {{ $booking->status_booking == 'pending' ? 'selected' : '' }}>
-                                Pending
-                            </option>
-
-                            <option value="dikonfirmasi"
-                                {{ $booking->status_booking == 'dikonfirmasi' ? 'selected' : '' }}>
-                                Dikonfirmasi
-                            </option>
-
-                            <option value="selesai"
-                                {{ $booking->status_booking == 'selesai' ? 'selected' : '' }}>
-                                Selesai
-                            </option>
-
-                            <option value="dibatalkan"
-                                {{ $booking->status_booking == 'dibatalkan' ? 'selected' : '' }}>
-                                Dibatalkan
-                            </option>
-
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700">Pasien</label>
+                        <select name="id_pasien" required
+                            class="w-full mt-1 border-pink-200 rounded-md focus:ring-pink-500 focus:border-pink-500 text-sm">
+                            @foreach($pasienList as $pas)
+                                <option value="{{ $pas->id_pasien }}" {{ old('id_pasien', $booking->id_pasien) == $pas->id_pasien ? 'selected' : '' }}>{{ $pas->user->name }}</option>
+                            @endforeach
                         </select>
-
                     </div>
 
-                    <!-- Keluhan -->
-                    <div class="mb-6">
-
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Keluhan
-                        </label>
-
-                        <textarea
-                            name="keluhan"
-                            rows="4"
-                            class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                            required>{{ old('keluhan', $booking->keluhan) }}</textarea>
-
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700">Dokter</label>
+                        <select name="id_dokter" required
+                            class="w-full mt-1 border-pink-200 rounded-md focus:ring-pink-500 focus:border-pink-500 text-sm">
+                            @foreach($dokterList as $doc)
+                                <option value="{{ $doc->id_dokter }}" {{ old('id_dokter', $booking->id_dokter) == $doc->id_dokter ? 'selected' : '' }}>{{ $doc->user->name }} - {{ $doc->spesialis }}</option>
+                            @endforeach
+                        </select>
                     </div>
 
-                    <!-- Tombol -->
-                    <div class="flex justify-end gap-3">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700">Tanggal Booking</label>
+                            <input type="date" name="tanggal_booking" value="{{ old('tanggal_booking', $booking->tanggal_booking) }}" required
+                                class="w-full mt-1 border-pink-200 rounded-md focus:ring-pink-500 focus:border-pink-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700">Jam Booking</label>
+                            <input type="time" name="jam_booking" value="{{ old('jam_booking', date('H:i', strtotime($booking->jam_booking))) }}" required
+                                class="w-full mt-1 border-pink-200 rounded-md focus:ring-pink-500 focus:border-pink-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700">Status Booking</label>
+                            <select name="status" required
+                                class="w-full mt-1 border-pink-200 rounded-md focus:ring-pink-500 focus:border-pink-500 text-sm">
+                                <option value="pending" {{ old('status', $booking->status) == 'pending' ? 'selected' : '' }}>Pending</option>
+                                <option value="dikonfirmasi" {{ old('status', $booking->status) == 'dikonfirmasi' ? 'selected' : '' }}>Dikonfirmasi</option>
+                                <option value="selesai" {{ old('status', $booking->status) == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                                <option value="dibatalkan" {{ old('status', $booking->status) == 'dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
+                            </select>
+                        </div>
+                    </div>
 
-                        <a href="{{ route('booking.index') }}"
-                           class="px-5 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700">Catatan / Keluhan Pasien</label>
+                        <textarea name="catatan" rows="3"
+                            class="w-full mt-1 border-pink-200 rounded-md focus:ring-pink-500 focus:border-pink-500 text-sm">{{ old('catatan', $booking->catatan) }}</textarea>
+                    </div>
 
-                            Kembali
-
+                    <div class="flex justify-end gap-2 pt-4">
+                        <a href="{{ route('booking-konsultasi.index') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md font-medium text-sm transition">
+                            Batal
                         </a>
-
-                        <button
-                            type="submit"
-                            class="px-5 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">
-
-                            Update Booking
-
+                        <button type="submit" class="bg-pink-600 hover:bg-pink-700 text-white px-5 py-2 rounded-md font-semibold text-sm transition shadow-sm">
+                            Perbarui Booking
                         </button>
-
                     </div>
-
                 </form>
-
             </div>
-
         </div>
-
     </div>
-
 </x-app-layout>

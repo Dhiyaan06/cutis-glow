@@ -36,7 +36,7 @@ class LayananApiController extends Controller
             'status' => 'success',
             'message' => 'Layanan berhasil ditambahkan',
             'data' => $layanan
-        ], 21);
+        ], 201);
     }
 
     /**
@@ -46,7 +46,7 @@ class LayananApiController extends Controller
     {
         $layanan = MasterLayanan::find($id);
         if (!$layanan) {
-            return response()->json(['message' => 'Data tidak ditemukan'], 44);
+            return response()->json(['message' => 'Data tidak ditemukan'], 404);
         }
         return response()->json(['status' => 'success', 'data' => $layanan], 200);
     }

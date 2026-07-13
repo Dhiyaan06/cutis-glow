@@ -12,15 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('jadwal_dokter', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('id_dokter')
-            ->constrained('manajemendokter')
-            ->cascadeOnDelete();
-
-            $table->date('tanggal');
+            $table->id('id_jadwal');
+            $table->foreignId('id_dokter')->constrained('dokter', 'id_dokter')->onDelete('cascade');
+            $table->string('hari'); // Senin, Selasa, Rabu, dsb.
             $table->time('jam_mulai');
-            $table->time('jam_selesai');
-            $table->enum('status', ['tersedia', 'tidak tersedia'])->default('tersedia');
+            $table->time('jam_selesai'); // mapping dari 'jam_selesal'
+            $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
             $table->timestamps();
         });
     }

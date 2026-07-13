@@ -16,8 +16,9 @@ return new class extends Migration
             // Relasi ke tabel pasien dan dokter
             $table->foreignId('id_pasien')->constrained('pasien', 'id_pasien')->onDelete('cascade');
             $table->foreignId('id_dokter')->constrained('dokter', 'id_dokter')->onDelete('cascade');
-            $table->dateTime('jadwal_konsultasi');
-            $table->enum('status_booking', ['pending', 'dikonfirmasi', 'selesai', 'dibatalkan'])->default('pending');
+            $table->date('tanggal_booking');
+            $table->time('jam_booking');
+            $table->enum('status', ['pending', 'dikonfirmasi', 'selesai', 'dibatalkan'])->default('pending');
             $table->text('keluhan')->nullable();
             $table->timestamps();
         });

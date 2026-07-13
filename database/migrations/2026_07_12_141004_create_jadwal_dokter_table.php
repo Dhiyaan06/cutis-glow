@@ -13,13 +13,10 @@ return new class extends Migration
     {
         Schema::create('jadwal_dokter', function (Blueprint $table) {
             $table->id('id_jadwal');
-            $table->foreignId('id_dokter')
-            ->constrained('dokter', 'id_dokter')
-            ->onDelete('cascade');
-            $table->string('hari');
-            $table->date('tanggal');
+            $table->foreignId('id_dokter')->constrained('dokter', 'id_dokter')->onDelete('cascade');
+            $table->string('hari'); // Senin, Selasa, Rabu, dsb.
             $table->time('jam_mulai');
-            $table->time('jam_selesai');
+            $table->time('jam_selesai'); // mapping dari 'jam_selesal'
             $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
             $table->timestamps();
         });

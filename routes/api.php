@@ -7,6 +7,8 @@ use App\Http\Controllers\Api\LayananApiController;
 use App\Http\Controllers\Api\DokterApiController;
 use App\Http\Controllers\Api\BookingApiController;
 use App\Http\Controllers\Api\RealtimeApiController;
+use App\Http\Controllers\Api\PasienApiController;
+use App\Http\Controllers\Api\JadwalDokterApiController;
 
 // Public Routes
 Route::post('/register', [AuthApiController::class, 'register']);
@@ -35,6 +37,33 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Server-Sent Events Realtime Updates
     Route::get('/realtime-updates', [RealtimeApiController::class, 'stream']);
+
+    // ================= Admin Only: Manajemen Data Master =================
+    Route::middleware('role:admin')->group(function () {
+        // Kelola Layanan
+        Route::post('/layanan', [LayananApiController::class, 'store']);
+        Route::get('/layanan/{id}', [LayananApiController::class, 'show']);
+        Route::put('/layanan/{id}', [LayananApiController::class, 'update']);
+        Route::delete('/layanan/{id}', [LayananApiController::class, 'destroy']);
+
+        // Kelola Dokter (otomatis bikin akun user dokter)
+        Route::post('/dokter', [DokterApiController::class, 'store']);
+        Route::get('/dokter/{id}', [DokterApiController::class, 'show']);
+        Route::put('/dokter/{id}', [DokterApiController::class, 'update']);
+        Route::delete('/dokter/{id}', [DokterApiController::class, 'destroy']);
+
+        // Kelola Jadwal Praktek Dokter
+        Route::post('/jadwal-dokter', [JadwalDokterApiController::class, 'store']);
+        Route::put('/jadwal-dokter/{id}', [JadwalDokterApiController::class, 'update']);
+        Route::delete('/jadwal-dokter/{id}', [JadwalDokterApiController::class, 'destroy']);
+
+        // Kelola Pasien (otomatis bikin akun user pasien)
+        Route::get('/pasien', [PasienApiController::class, 'index']);
+        Route::get('/pasien/{id}', [PasienApiController::class, 'show']);
+        Route::post('/pasien', [PasienApiController::class, 'store']);
+        Route::put('/pasien/{id}', [PasienApiController::class, 'update']);
+        Route::delete('/pasien/{id}', [PasienApiController::class, 'destroy']);
+    });
 
     // Get current logged-in user profile
     Route::get('/user', function (Request $request) {

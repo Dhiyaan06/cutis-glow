@@ -251,7 +251,7 @@ Konfigurasi database pada file `.env`
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=cutis_glow
+DB_DATABASE=db_cutis_glow
 DB_USERNAME=root
 DB_PASSWORD=
 ```

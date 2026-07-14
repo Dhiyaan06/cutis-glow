@@ -58,6 +58,28 @@ class DokterApiController extends Controller
     }
 
     /**
+     * [Dokter] Ambil profil dokter milik user yang sedang login.
+     * Dipakai supaya dokter bisa lihat (jadwal dari) profilnya sendiri
+     * tanpa perlu tahu id_dokter miliknya.
+     */
+    public function myProfile(Request $request)
+    {
+        $dokter = $request->user()->dokter;
+
+        if (!$dokter) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Profil dokter tidak ditemukan untuk akun ini.',
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $dokter->load('user'),
+        ]);
+    }
+
+    /**
      * [Admin] Detail 1 dokter.
      */
     public function show(string $id)

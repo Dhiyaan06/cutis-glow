@@ -38,12 +38,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // Server-Sent Events Realtime Updates
     Route::get('/realtime-updates', [RealtimeApiController::class, 'stream']);
 
-    // ================= Dokter Only: Profil sendiri =================
-    Route::middleware('role:dokter')->group(function () {
-        // Dipakai dokter buat lihat jadwal praktek miliknya sendiri
-        Route::get('/me/dokter', [DokterApiController::class, 'myProfile']);
-    });
-
     // ================= Admin Only: Manajemen Data Master =================
     Route::middleware('role:admin')->group(function () {
         // Kelola Layanan

@@ -1,8 +1,8 @@
 # ✨ Cutis Glow - Beauty Clinic Management System
 
-**Cutis Glow** adalah sistem informasi manajemen klinik kecantikan berbasis **Website** dan **Mobile** yang dikembangkan menggunakan arsitektur **Client–Server**. Sistem ini dibangun untuk membantu proses administrasi klinik, mulai dari pengelolaan data pasien, dokter, layanan perawatan, jadwal praktik, booking konsultasi, hingga riwayat layanan dalam satu platform yang terintegrasi.
+**Cutis Glow** adalah sistem informasi manajemen klinik kecantikan berbasis **Website** dan **Mobile** yang dikembangkan menggunakan arsitektur **Client–Server**. Sistem ini membantu proses administrasi klinik mulai dari pengelolaan data pasien, dokter, layanan perawatan, jadwal praktik, booking konsultasi, hingga riwayat layanan dalam satu platform yang terintegrasi.
 
-Backend aplikasi dikembangkan menggunakan **Laravel** sebagai penyedia REST API, sedangkan aplikasi mobile menggunakan **Flutter** sebagai client. Seluruh komunikasi data dilakukan melalui REST API yang diamankan menggunakan **Laravel Sanctum**, dengan pengaturan hak akses berbasis **Role-Based Access Control (RBAC)** menggunakan **Spatie Laravel Permission**.
+Backend aplikasi dikembangkan menggunakan **Laravel** sebagai penyedia **REST API**, sedangkan aplikasi mobile dikembangkan menggunakan **Flutter** sebagai client. Seluruh komunikasi data dilakukan melalui REST API yang diamankan menggunakan **Laravel Sanctum** untuk autentikasi dan **Spatie Laravel Permission** untuk otorisasi berbasis **Role-Based Access Control (RBAC)**.
 
 ---
 
@@ -11,7 +11,6 @@ Backend aplikasi dikembangkan menggunakan **Laravel** sebagai penyedia REST API,
 ## 👨‍💼 Administrator
 
 - Dashboard statistik klinik
-- Dashboard grafik aktivitas
 - CRUD Data Dokter
 - CRUD Data Pasien
 - CRUD Master Layanan
@@ -51,23 +50,29 @@ Backend aplikasi dikembangkan menggunakan **Laravel** sebagai penyedia REST API,
 
 # 🏗️ Arsitektur Sistem
 
-Cutis Glow menggunakan arsitektur **Client–Server** dengan tiga lapisan utama:
+Cutis Glow menggunakan arsitektur **Client–Server** yang terdiri dari tiga lapisan utama.
 
-- **Presentation Layer**
-  - Laravel Web Dashboard
-  - Flutter Mobile Application
+### Presentation Layer
 
-- **Application Layer**
-  - REST API
-  - Business Logic
-  - Authentication
-  - Authorization
+- Laravel Web Dashboard
+- Flutter Mobile Application
 
-- **Data Layer**
-  - MySQL Database
-  - Eloquent ORM
+### Application Layer
 
-Backend menerapkan pola **Model–View–Controller (MVC)** sehingga logika bisnis, tampilan, dan pengelolaan data dipisahkan dengan baik. Komunikasi antara website dan aplikasi mobile dilakukan melalui REST API menggunakan autentikasi Laravel Sanctum dan otorisasi Spatie Laravel Permission.
+- REST API
+- Authentication (Laravel Sanctum)
+- Authorization (Spatie Laravel Permission / RBAC)
+- Master Data Module
+- Booking Module
+- Consultation Module
+- Service Module
+
+### Data Layer
+
+- MySQL Database
+- Eloquent ORM
+
+Backend menerapkan arsitektur **Model–View–Controller (MVC)** sehingga logika bisnis, tampilan, dan pengelolaan data dipisahkan dengan baik. Website dan aplikasi mobile mengakses data melalui REST API sehingga keduanya menggunakan sumber data yang sama.
 
 ---
 
@@ -106,14 +111,14 @@ Cutis Glow/
 | Komponen | Teknologi |
 |----------|-----------|
 | Backend | Laravel 13 |
-| Bahasa Backend | PHP 8.5 |
+| Bahasa Backend | PHP 8.4+ |
 | Database | MySQL / MariaDB |
 | Authentication | Laravel Sanctum |
 | Authorization | Spatie Laravel Permission |
 | Frontend Mobile | Flutter |
 | Bahasa Mobile | Dart |
 | API | REST API |
-| UI | Tailwind CSS |
+| UI Website | Tailwind CSS |
 | Version Control | Git & GitHub |
 
 ---
@@ -157,9 +162,16 @@ Cutis Glow/
 
 # 🔌 REST API
 
-Semua endpoint menggunakan format **JSON** dan memerlukan **Bearer Token** setelah pengguna berhasil login.
+Seluruh endpoint menggunakan format **JSON**.
 
-### Authentication
+Endpoint yang bersifat **protected** memerlukan Bearer Token yang diperoleh setelah proses login.
+
+```http
+Authorization: Bearer {token}
+Accept: application/json
+```
+
+## Authentication
 
 ```http
 POST   /api/login
@@ -167,7 +179,7 @@ POST   /api/logout
 GET    /api/user
 ```
 
-### Admin
+## Admin
 
 ```http
 GET|POST|PUT|DELETE /api/doctors
@@ -178,7 +190,7 @@ GET|POST|PUT|DELETE /api/bookings
 GET|POST|PUT|DELETE /api/service-histories
 ```
 
-### Dokter
+## Dokter
 
 ```http
 GET    /api/dashboard
@@ -188,7 +200,7 @@ POST   /api/consultations
 PUT    /api/consultations/{id}
 ```
 
-### Pasien
+## Pasien
 
 ```http
 GET    /api/profile
@@ -221,13 +233,6 @@ Install dependency Laravel
 composer install
 ```
 
-Install dependency frontend
-
-```bash
-npm install
-npm run build
-```
-
 Salin file environment
 
 ```bash
@@ -240,7 +245,7 @@ Generate application key
 php artisan key:generate
 ```
 
-Atur konfigurasi database pada file `.env`
+Konfigurasi database pada file `.env`
 
 ```env
 DB_CONNECTION=mysql
@@ -251,13 +256,20 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
+Install dependency frontend
+
+```bash
+npm install
+npm run build
+```
+
 Jalankan migrasi database
 
 ```bash
 php artisan migrate --seed
 ```
 
-Jalankan server
+Jalankan server Laravel
 
 ```bash
 php artisan serve
@@ -273,7 +285,7 @@ php artisan serve
 | dokter@cutisglow.com | password | Dokter |
 | pasien@cutisglow.com | password | Pasien |
 
-> **Catatan:** Pastikan data akun di atas sesuai dengan seeder yang digunakan pada project.
+> **Catatan:** Pastikan data akun sesuai dengan seeder yang digunakan pada project.
 
 ---
 
@@ -291,7 +303,11 @@ Install dependency
 flutter pub get
 ```
 
-Sesuaikan Base URL pada file `lib/services/api_client.dart`
+Atur Base URL pada file
+
+```dart
+lib/services/api_client.dart
+```
 
 Android Emulator
 
@@ -315,19 +331,19 @@ flutter run
 
 # 🔄 Catatan Pengembangan
 
-Apabila terdapat perubahan struktur database setelah melakukan **clone** atau **pull** repository terbaru, jalankan:
+Apabila terdapat perubahan struktur database setelah melakukan **clone** atau **pull**, jalankan:
 
 ```bash
 php artisan migrate
 ```
 
-Jika terjadi konflik migrasi atau struktur database tidak sesuai, gunakan:
+Jika struktur database sudah tidak sesuai, gunakan:
 
 ```bash
 php artisan migrate:fresh --seed
 ```
 
-> **Perhatian:** Perintah `migrate:fresh --seed` akan menghapus seluruh data yang ada pada database dan membuat ulang seluruh tabel beserta data seeder.
+> **Perhatian:** Perintah `migrate:fresh --seed` akan menghapus seluruh data pada database.
 
 ---
 
@@ -356,9 +372,9 @@ php artisan migrate:fresh --seed
 
 # 🎥 Demo
 
-Tambahkan tautan video demonstrasi proyek di bawah ini.
+Tambahkan tautan video demonstrasi proyek.
 
-```
+```text
 https://youtu.be/xxxxxxxxxxx
 ```
 

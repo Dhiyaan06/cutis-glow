@@ -40,7 +40,7 @@ class DashboardController extends Controller
         }
 
         if ($user->hasRole('dokter')) {
-            $dokter = Dokter::where('id_pengguna', $user->id_pengguna)->first();
+            $dokter = Dokter::where('user_id', $user->id_pengguna)->first();
 
             $totalBooking = $dokter ? BookingKonsultasi::where('id_dokter', $dokter->id_dokter)
                 ->whereIn('status', ['pending', 'dikonfirmasi'])->count() : 0;

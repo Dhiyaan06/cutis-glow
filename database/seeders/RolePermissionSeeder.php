@@ -51,7 +51,8 @@ class RolePermissionSeeder extends Seeder
         $dokterUser->assignRole($dokterRole);
 
         $dokter = Dokter::create([
-            'id_pengguna' => $dokterUser->id_pengguna,
+            'user_id' => $dokterUser->id_pengguna,
+            'nama' => $dokterUser->name,
             'spesialis' => 'Spesialis Kulit & Kecantikan (Dermatologist)',
             'no_str' => 'STR-987654321099',
             'no_hp' => '085555555555',
@@ -72,7 +73,8 @@ class RolePermissionSeeder extends Seeder
         $dokterUser2->assignRole($dokterRole);
 
         $dokter2 = Dokter::create([
-            'id_pengguna' => $dokterUser2->id_pengguna,
+            'user_id' => $dokterUser2->id_pengguna,
+            'nama' => $dokterUser2->name,
             'spesialis' => 'Spesialis Bedah Plastik & Rekonstruksi Estetik',
             'no_str' => 'STR-887766554422',
             'no_hp' => '081223344556',

@@ -43,7 +43,7 @@ class BookingApiController extends Controller
                 ->orderBy('jam_booking', 'desc')
                 ->get();
         } elseif ($user->role === 'dokter') {
-            $dokter = Dokter::where('id_pengguna', $user->id_pengguna)->first();
+            $dokter = Dokter::where('user_id', $user->id_pengguna)->first();
             if (!$dokter) {
                 return response()->json(['status' => 'success', 'data' => []]);
             }

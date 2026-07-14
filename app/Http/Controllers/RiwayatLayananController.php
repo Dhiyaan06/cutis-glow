@@ -64,7 +64,7 @@ class RiwayatLayananController extends Controller
 
         $user = auth()->user();
         if ($user->hasRole('dokter')) {
-            $dokterList = Dokter::with('user')->where('id_pengguna', $user->id_pengguna)->get();
+            $dokterList = Dokter::with('user')->where('user_id', $user->id_pengguna)->get();
         } else {
             $dokterList = Dokter::with('user')->get();
         }
@@ -81,7 +81,7 @@ class RiwayatLayananController extends Controller
     {
         $user = auth()->user();
         if ($user->hasRole('dokter')) {
-            $dokterObj = Dokter::where('id_pengguna', $user->id_pengguna)->first();
+            $dokterObj = Dokter::where('user_id', $user->id_pengguna)->first();
             $request->merge(['id_dokter' => $dokterObj ? $dokterObj->id_dokter : null]);
         }
 

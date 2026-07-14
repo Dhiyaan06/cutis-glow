@@ -14,7 +14,8 @@ class Dokter extends Model
     protected $primaryKey = 'id_dokter';
 
     protected $fillable = [
-        'id_pengguna',
+        'user_id',
+        'nama',
         'spesialis',
         'no_str',
         'no_hp',
@@ -24,7 +25,7 @@ class Dokter extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'id_pengguna', 'id_pengguna');
+        return $this->belongsTo(User::class, 'user_id', 'id_pengguna');
     }
 
     public function jadwal(){

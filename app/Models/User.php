@@ -39,7 +39,6 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'status_aktif' => 'boolean'
     ];
 
     public function pasien()
@@ -55,9 +54,8 @@ class User extends Authenticatable
     {
         return $this->hasOne(
             Dokter::class,
-            'id_pengguna',
+            'user_id',
             'id_pengguna'
         );
     }
 }
-

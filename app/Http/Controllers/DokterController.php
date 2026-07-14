@@ -80,7 +80,8 @@ class DokterController extends Controller
         $jadwalGabungan = implode(' | ', $daftarJadwal);
 
         Dokter::create([
-            'id_pengguna' => $user->id_pengguna,
+            'user_id' => $user->id_pengguna,
+            'nama' => $user->name,
             'spesialis' => $request->spesialis,
             'no_str' => $request->no_str,
             'no_hp' => $request->no_hp,
@@ -126,7 +127,7 @@ class DokterController extends Controller
     public function update(Request $request, $id)
     {
         $dokter = Dokter::findOrFail($id);
-        $user = User::findOrFail($dokter->id_pengguna);
+        $user = User::findOrFail($dokter->user_id);
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -156,6 +157,7 @@ class DokterController extends Controller
 
         // Update Dokter
         $dokter->update([
+            'nama' => $request->name,
             'spesialis' => $request->spesialis,
             'no_str' => $request->no_str,
             'no_hp' => $request->no_hp,
@@ -169,7 +171,7 @@ class DokterController extends Controller
     public function destroy($id)
     {
         $dokter = Dokter::findOrFail($id);
-        $user = User::findOrFail($dokter->id_pengguna);
+        $user = User::findOrFail($dokter->user_id);
 
         $dokter->delete();
         $user->delete();

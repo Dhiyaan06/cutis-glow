@@ -58,7 +58,7 @@ class LayananApiController extends Controller
     {
         $layanan = MasterLayanan::find($id);
         if (!$layanan) {
-            return response()->json(['message' => 'Data tidak ditemukan'], 44);
+            return response()->json(['message' => 'Data tidak ditemukan'], 404);
         }
 
         $layanan->update($request->all());
@@ -77,7 +77,7 @@ class LayananApiController extends Controller
     {
         $layanan = MasterLayanan::find($id);
         if (!$layanan) {
-            return response()->json(['message' => 'Data tidak ditemukan'], 44);
+            return response()->json(['message' => 'Data tidak ditemukan'], 404);
         }
 
         $layanan->delete();

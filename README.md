@@ -50,4 +50,3 @@ Catatan: Jika migrasi standar mengalami kendala struktur, gunakan perintah fresh
 ```bash
 php artisan migrate:fresh --seed
 ```
-

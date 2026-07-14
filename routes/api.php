@@ -24,6 +24,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Bookings & Treatment History
     Route::get('/bookings', [BookingApiController::class, 'index']);
     Route::post('/bookings', [BookingApiController::class, 'store']);
+    Route::post('/bookings/{id}/konfirmasi', [BookingApiController::class, 'konfirmasi']);
+    Route::post('/bookings/{id}/batal', [BookingApiController::class, 'batal']);
+    Route::post('/bookings/{id}/selesai', [BookingApiController::class, 'selesai']);
     Route::get('/riwayat-layanan', [BookingApiController::class, 'riwayat']);
 
     // Notifications

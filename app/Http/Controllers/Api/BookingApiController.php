@@ -167,6 +167,103 @@ class BookingApiController extends Controller
         ], 201);
     }
 
+    // Aksi cepat: Konfirmasi booking (admin/dokter)
+    public function konfirmasi(Request $request, $id)
+    {
+        $user = $request->user();
+        if (!in_array($user->role, ['admin', 'dokter'])) {
+            return response()->json(['status' => 'error', 'message' => 'Tidak diizinkan.'], 403);
+        }
+
+        $booking = BookingKonsultasi::findOrFail($id);
+        $booking->status = 'dikonfirmasi';
+        $booking->save();
+
+        $pasien = Pasien::with('user')->find($booking->id_pasien);
+        if ($pasien) {
+            Notifikasi::create([
+                'id_pengguna' => $pasien->user->id_pengguna,
+                'judul' => 'Booking Dikonfirmasi',
+                'pesan' => "Booking Anda pada tanggal {$booking->tanggal_booking} jam {$booking->jam_booking} telah dikonfirmasi.",
+                'tipe' => 'booking'
+            ]);
+        }
+
+        return response()->json(['status' => 'success', 'message' => 'Booking berhasil dikonfirmasi', 'data' => $booking]);
+    }
+
+    // Aksi cepat: Batalkan booking (admin/dokter)
+    public function batal(Request $request, $id)
+    {
+        $user = $request->user();
+        if (!in_array($user->role, ['admin', 'dokter'])) {
+            return response()->json(['status' => 'error', 'message' => 'Tidak diizinkan.'], 403);
+        }
+
+        $booking = BookingKonsultasi::findOrFail($id);
+        $booking->status = 'dibatalkan';
+        $booking->save();
+
+        $pasien = Pasien::with('user')->find($booking->id_pasien);
+        if ($pasien) {
+            Notifikasi::create([
+                'id_pengguna' => $pasien->user->id_pengguna,
+                'judul' => 'Booking Dibatalkan',
+                'pesan' => "Booking Anda pada tanggal {$booking->tanggal_booking} jam {$booking->jam_booking} telah dibatalkan.",
+                'tipe' => 'booking'
+            ]);
+        }
+
+        return response()->json(['status' => 'success', 'message' => 'Booking berhasil dibatalkan', 'data' => $booking]);
+    }
+
+    // Aksi cepat: Selesaikan booking + catat riwayat treatment (admin/dokter)
+    public function selesai(Request $request, $id)
+    {
+        $user = $request->user();
+        if (!in_array($user->role, ['admin', 'dokter'])) {
+            return response()->json(['status' => 'error', 'message' => 'Tidak diizinkan.'], 403);
+        }
+
+        $request->validate([
+            'id_layanan' => 'required|exists:master_layanan,id_layanan',
+            'tanggal_treatment' => 'required|date',
+            'qty' => 'required|integer|min:1',
+            'catatan' => 'nullable|string',
+        ]);
+
+        $booking = BookingKonsultasi::findOrFail($id);
+        $layanan = \App\Models\MasterLayanan::findOrFail($request->id_layanan);
+        $hargaAkhir = $layanan->harga - ($layanan->harga * $layanan->diskon / 100);
+
+        $riwayat = RiwayatLayanan::create([
+            'id_booking' => $booking->id_booking,
+            'id_pasien' => $booking->id_pasien,
+            'id_dokter' => $booking->id_dokter,
+            'id_layanan' => $request->id_layanan,
+            'tanggal_treatment' => $request->tanggal_treatment,
+            'status' => 'selesai',
+            'catatan' => $request->catatan,
+            'harga' => $hargaAkhir,
+            'qty' => $request->qty,
+        ]);
+
+        $booking->status = 'selesai';
+        $booking->save();
+
+        $pasien = Pasien::with('user')->find($booking->id_pasien);
+        if ($pasien) {
+            Notifikasi::create([
+                'id_pengguna' => $pasien->user->id_pengguna,
+                'judul' => 'Treatment Selesai',
+                'pesan' => "Booking Anda pada tanggal {$booking->tanggal_booking} jam {$booking->jam_booking} telah selesai.",
+                'tipe' => 'booking'
+            ]);
+        }
+
+        return response()->json(['status' => 'success', 'message' => 'Booking selesai & riwayat tercatat', 'data' => $riwayat]);
+    }
+
     public function riwayat(Request $request)
     {
         $user = $request->user();

@@ -1,52 +1,211 @@
-# Cutis Glow - Sistem Informasi & Portal Klinik Kecantikan
-Aplikasi portal dan manajemen klinik kecantikan berbasis Laravel 13 untuk memfasilitasi booking pasien, rekam medis dokter, serta kontrol penuh oleh admin.
+# 🌸 Cutis Glow - Sistem Informasi & Portal Klinik Kecantikan
 
-## Fitur Utama
-- Autentikasi & manajemen role-permission (Admin, Dokter, Pasien)
-- Dashboard statistik + grafik interaktif (Multi-role Dashboard)
-- CRUD Kompleks (4 Entitas Mandiri untuk 4 Anggota Kelompok):
-  1. CRUD Dokter (Kelola data profil & spesialisasi dokter)
-  2. CRUD Pasien (Kelola data rekam medis & profil pasien)
-  3. CRUD Master Layanan (Kelola jenis perawatan & harga treatment)
-  4. CRUD Booking Konsultasi (Kelola reservasi jadwal antara pasien & dokter)
-- Search, sort, filter, pagination
+Cutis Glow merupakan aplikasi portal dan manajemen klinik kecantikan berbasis **Laravel 13** yang dikembangkan untuk membantu proses pengelolaan klinik, mulai dari booking konsultasi, pengelolaan layanan, data pasien, data dokter, hingga dashboard admin.
 
-## Tech Stack
-Laravel 13 • PHP 8.5.7 • MySQL 8 (Laragon) • Tailwind CSS
+---
 
-## Instalasi
+## ✨ Fitur Utama
+
+### 🔐 Authentication & Authorization
+- Login & Logout
+- Role & Permission Management
+- Multi Role (Admin, Dokter, Pasien)
+
+### 📊 Dashboard
+- Dashboard Admin
+- Dashboard Dokter
+- Dashboard Pasien
+- Statistik Data
+- Grafik Interaktif
+
+### 📝 CRUD Management
+- **CRUD Dokter**
+  - Kelola data dokter
+  - Spesialisasi
+  - Jadwal praktik
+
+- **CRUD Pasien**
+  - Kelola profil pasien
+  - Data rekam medis
+
+- **CRUD Master Layanan**
+  - Tambah layanan
+  - Edit layanan
+  - Hapus layanan
+  - Harga treatment
+
+- **CRUD Booking Konsultasi**
+  - Booking pasien
+  - Jadwal konsultasi dokter
+  - Status booking
+
+### 🔎 Fitur Pendukung
+- Search
+- Sorting
+- Filter
+- Pagination
+- Flash Message
+- Validasi Form
+
+---
+
+## 🛠 Tech Stack
+
+- Laravel 13
+- PHP 8.5.7
+- MySQL 8
+- Tailwind CSS
+- Laravel Breeze
+- Spatie Laravel Permission
+
+---
+
+## 🚀 Instalasi
+
+Clone repository
+
 ```bash
-git clone https://github.com/Dhiyaan06/cutis-glow.git && cd cutis-glow
-composer install && npm install && npm run build
+git clone https://github.com/Dhiyaan06/cutis-glow.git
+```
+
+Masuk ke folder project
+
+```bash
+cd cutis-glow
+```
+
+Install dependency
+
+```bash
+composer install
+npm install
+```
+
+Copy file environment
+
+```bash
+cp .env.example .env
+```
+
+Generate application key
+
+```bash
+php artisan key:generate
+```
+
+Sesuaikan konfigurasi database pada file **.env**
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=cutis_glow
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+Jalankan migrasi dan seeder
+
+```bash
 php artisan migrate --seed
+```
+
+Jalankan Vite
+
+```bash
+npm run dev
+```
+
+Jalankan server Laravel
+
+```bash
 php artisan serve
 ```
 
-## Akun Default
-| Email | Password | Role |
-| :--- | :--- | :--- |
-| admin@cutisglow.com | password | admin |
-| dokter@cutisglow.com | password | dokter |
-| pasien@cutisglow.com | password | pasien |
+---
 
-## Update Terbaru: Fitur & Perubahan Database
+## 👤 Akun Default
 
-### 1. Modul CRUD Master Layanan Klinik (Cutis Glow)
-Berhasil mengimplementasikan modul manajemen layanan klinik secara utuh:
-- Halaman utama daftar layanan (`index`)
-- Form tambah dan logika simpan data (`create` & `store`)
-- Form ubah dan logika perbarui data (`edit` & `update`)
-- Logika hapus data (`destroy`)
+| Role | Email | Password |
+|------|-------------------------|----------|
+| Admin | admin@cutisglow.com | password |
+| Dokter | dokter@cutisglow.com | password |
+| Pasien | pasien@cutisglow.com | password |
 
-### PERINTAH WAJIB SETELAH CLONE / PULL (PENTING!)
-Ada perubahan pada struktur tabel `users` dengan penambahan kolom `no_hp`. Agar aplikasi tidak mengalami error saat registrasi, jalankan perintah migrasi database berikut di terminal lokal masing-masing:
+---
+
+# 📢 Update Terbaru
+
+## ✅ Modul CRUD Master Layanan
+
+Berhasil diimplementasikan modul **Master Layanan Klinik**, meliputi:
+
+- Menampilkan daftar layanan
+- Menambahkan layanan baru
+- Mengubah data layanan
+- Menghapus layanan
+- Validasi input
+- Flash message setelah aksi CRUD
+
+---
+
+## ⚠️ Perubahan Database
+
+Terdapat perubahan pada tabel **users** dengan penambahan kolom:
+
+- `no_hp`
+
+Setelah melakukan **clone** atau **pull** terbaru, jalankan migrasi berikut:
 
 ```bash
 php artisan migrate
 ```
 
-Catatan: Jika migrasi standar mengalami kendala struktur, gunakan perintah fresh (peringatan: akan mengulang data dari awal):
+Apabila terjadi konflik struktur database, gunakan:
 
 ```bash
 php artisan migrate:fresh --seed
 ```
+
+> **Perhatian:** Perintah `migrate:fresh --seed` akan menghapus seluruh data pada database dan membuat ulang tabel beserta data awal.
+
+---
+
+## 📂 Struktur Fitur
+
+```
+app/
+├── Models
+├── Http
+│   ├── Controllers
+│   └── Requests
+├── Policies
+├── Providers
+
+resources/
+├── views
+├── css
+└── js
+
+database/
+├── migrations
+├── seeders
+└── factories
+```
+
+---
+
+## 👥 Tim Pengembang
+
+**Kelompok 4**
+
+- Dhiya'an Sani
+- Dini Sri Ayu Priyono
+- Hilmi Durroh Taqwiyah
+- Putri Leonita Cikal Buchori
+
+---
+
+## 📄 Keterangan
+
+Project ini dikembangkan sebagai tugas besar mata kuliah **Pemrograman Web (PWeb)** Program Studi Teknik Informatika, Fakultas Sains dan Teknologi, Universitas Muhammadiyah Bandung.

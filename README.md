@@ -1,4 +1,4 @@
-# 🌸 Cutis Glow - Sistem Informasi & Portal Klinik Kecantikan
+# 🌸 Cutis Glow - Sistem Informasi 
 
 Cutis Glow merupakan aplikasi portal dan manajemen klinik kecantikan berbasis **Laravel 13** yang dikembangkan untuk membantu proses pengelolaan klinik, mulai dari booking konsultasi, pengelolaan layanan, data pasien, data dokter, hingga dashboard admin.
 

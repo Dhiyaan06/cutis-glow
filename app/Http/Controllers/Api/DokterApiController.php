@@ -115,7 +115,7 @@ class DokterApiController extends Controller
             'role' => 'dokter',
             'status_aktif' => $request->status_aktif ?? 'aktif',
         ]);
-        $user->assignRole(Role::findOrCreate('dokter'));
+        $user->assignRole(Role::findOrCreate('dokter', 'web'));
 
         $dokter = Dokter::create([
             'user_id' => $user->id_pengguna,

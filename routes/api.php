@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\BookingApiController;
 use App\Http\Controllers\Api\RealtimeApiController;
 use App\Http\Controllers\Api\PasienApiController;
 use App\Http\Controllers\Api\JadwalDokterApiController;
+use App\Http\Controllers\Api\ProfileApiController;
 
 // Public Routes
 Route::post('/register', [AuthApiController::class, 'register']);
@@ -16,6 +17,7 @@ Route::post('/login', [AuthApiController::class, 'login']);
 
 // Protected Routes (Sanctum)
 Route::middleware('auth:sanctum')->group(function () {
+    Route::put('/profile', [ProfileApiController::class, 'update']);
     Route::post('/logout', [AuthApiController::class, 'logout']);
 
     // Catalog & Master Data

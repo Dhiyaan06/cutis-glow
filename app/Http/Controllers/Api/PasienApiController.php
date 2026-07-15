@@ -70,7 +70,7 @@ class PasienApiController extends Controller
             'role' => 'pasien',
             'status_aktif' => $request->status_aktif ?? 'aktif',
         ]);
-        $user->assignRole(Role::findOrCreate('pasien'));
+        $user->assignRole(Role::findOrCreate('pasien', 'web'));
 
         $pasien = Pasien::create([
             'id_pengguna' => $user->id_pengguna,

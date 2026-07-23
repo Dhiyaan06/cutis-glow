@@ -221,3 +221,6 @@ resources/views/                # Halaman Blade (Tailwind)
 ## 8. Catatan Pengembangan
 
 - Notifikasi realtime (Server-Sent Events) sudah diimplementasikan di `RealtimeApiController` namun **tidak diaktifkan di sisi mobile** karena `php artisan serve` tidak mendukung koneksi concurrent/long-lived dengan baik (single-threaded). Data tetap tersinkronisasi lewat mekanisme on-demand (refresh manual/otomatis setelah aksi).
+
+Link Github Android
+https://github.com/Dhiyaan06/cutis_glow_android.git
